@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>JobVista</display-name>
+	<filter>
+		<description>
+		</description>
+		<display-name>CreateOpeningFilter</display-name>
+		<filter-name>CreateOpeningFilter</filter-name>
+		<filter-class>org.servlet.panalist.CreateOpeningFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CreateOpeningFilter</filter-name>
+		<url-pattern>/CreateOpeningFilter</url-pattern>
+	</filter-mapping>
+	<servlet>
+		<description>
+		</description>
+		<display-name>AddSkillToApplicant</display-name>
+		<servlet-name>AddSkillToApplicant</servlet-name>
+		<servlet-class>org.servlet.panalist.AddSkillToApplicant</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>CreateOpening</display-name>
+		<servlet-name>CreateOpening</servlet-name>
+		<servlet-class>org.servlet.panalist.CreateOpening</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddSkillToApplicant</servlet-name>
+		<url-pattern>/AddSkillToApplicant</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CreateOpening</servlet-name>
+		<url-pattern>/CreateOpening</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>
