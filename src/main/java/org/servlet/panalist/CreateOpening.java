@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.json.JSONObject;
 import org.recruitment.jobs.Openings;
 import org.recruitment.users.Panelist;
@@ -44,7 +45,8 @@ public class CreateOpening extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub	
 		
-		Logger logger = CommonLogger.getCommon().getLogger(CreateOpening.class);
+		Logger logger = Logger.getLogger(CreateOpening.class);
+		PropertyConfigurator.configure("/home/ajith-zstk355/.logs/jobvista.properties");
 		JSONObject responseJson = new JSONObject();
 		StringBuilder jsonLoad = new StringBuilder();
         try {
@@ -54,6 +56,8 @@ public class CreateOpening extends HttpServlet {
             for (String line = br.readLine(); line != null; line = br.readLine()) {
                 jsonLoad.append(line);
             }
+            
+//            JSONObject jsonData = new JSONObject(request.getParameter("JSON"));
             JSONObject jsonData = new JSONObject(jsonLoad.toString());
             logger.info("JSON payload successfully parsed.");
 
@@ -63,8 +67,8 @@ public class CreateOpening extends HttpServlet {
             Panelist panelist = new Panelist(
                 panelistJson.getString("name"),
                 panelistJson.getString("email"),
-//                Gender.valueOf(panelistJson.getString("gender")),
-                Gender.valueOf("FEMALE"),
+                Gender.valueOf(panelistJson.getString("gender").toUpperCase()),
+//                Gender.valueOf("FEMALE"),
                 panelistJson.getString("position"),
                 panelistJson.getString("organistion"), // Fixed typo: organistion -> organization
                 panelistJson.getString("department")

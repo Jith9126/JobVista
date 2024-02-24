@@ -10,7 +10,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>CreateOpeningFilter</filter-name>
-		<url-pattern>/CreateOpeningFilter</url-pattern>
+		<url-pattern>/CreateOpening</url-pattern>
 	</filter-mapping>
 	<servlet>
 		<description>

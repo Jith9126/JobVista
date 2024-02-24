@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.ExecutionException;
 
 import org.recruitment.jobs.Openings;
 import org.util.ConnectionClass;
@@ -91,9 +92,53 @@ public class PanelistManager {
 		}
 	}
 	
-	public boolean isPanelistExist(Panelist panelist) {
+	public boolean isPanelistExist(Panelist panelist) throws Exception {
+		int departmentId=0;
+		int orgId=0;
 		
-		return false;
+		
+		try {
+			Connection conn = ConnectionClass.CreateCon().getConnection();
+			
+			PreparedStatement selectDepartmentAndOrgId = conn.prepareStatement(Constants.selectDepartmentAndOrgId);
+			
+			selectDepartmentAndOrgId.setString(1, panelist.getDepartment());
+			selectDepartmentAndOrgId.setString(2, panelist.getOrganistion());
+			
+			
+			ResultSet departmentOrgId = selectDepartmentAndOrgId.executeQuery();
+			if(departmentOrgId.next()) {
+				departmentId = departmentOrgId.getInt("Department_Id");
+				orgId = departmentOrgId.getInt("Org_Id");
+			}
+			
+			
+			
+			PreparedStatement selectPanelist = conn.prepareStatement(Constants.selextPanelistFromDepartOrg);
+			selectPanelist.setString(1, panelist.getName());
+			selectPanelist.setString(2,panelist.getGender().getValue());
+			selectPanelist.setString(3, panelist.getEmail());
+			selectPanelist.setString(4, panelist.getPosition());
+			selectPanelist.setInt(5, orgId);
+			selectPanelist.setInt(6, departmentId);
+			ResultSet panelistrs = selectPanelist.executeQuery();
+			if (panelistrs.next()) {
+				return true;
+			}
+			else {
+				throw new Exception("Panelist not Found");
+			}
+			
+			
+			
+		}
+		catch (Exception e){
+			throw new Exception(e.getMessage());
+		}
+		
+		
+		
+		
 	}
 	
 }
