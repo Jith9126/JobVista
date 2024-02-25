@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.recruitment.jobs.Openings;
@@ -38,7 +39,7 @@ public class PanelistManager {
 	
 	
 	
-	public int addOpening(Panelist panelist, Openings opening) throws Exception {
+	public int addOpening(Panelist panelist, Openings opening, List<Panelist> interviwers) throws Exception {
 		
 		try {
 		Connection conn = ConnectionClass.CreateCon().getConnection();
@@ -75,7 +76,22 @@ public class PanelistManager {
 				
 				
 				
+				
+				
 				int affectedRows = createAnewOpening.executeUpdate();
+				
+				for (Panelist currPanelist: interviwers ) {
+					PreparedStatement assinginterviwers = conn.prepareStatement(Constants.assignPanelistToOpenings);
+					assinginterviwers.setString(1, currPanelist.getName());
+					assinginterviwers.setString(2, currPanelist.getEmail());
+					assinginterviwers.setInt(3,count);
+					
+					assinginterviwers.executeUpdate();
+					
+				}
+				
+				
+				
 	            if (affectedRows > 0) {
 	                System.out.println("A new row has been inserted.");
 	            }
