@@ -54,7 +54,11 @@ public class CandidateSelection extends HttpServlet {
             }
             JSONObject jsonData = new JSONObject(jsonLoad.toString());
             logger.info("JSON payload successfully parsed.");
-            JSONObject testJson  = jsonData.getJSONObject("");
+            JSONObject panelistJson  = jsonData.getJSONObject("panalist");
+            JSONObject testJson = jsonData.getJSONObject("test");
+            String SelectOrOnhold = jsonData.getString("SelectOrOnhold");
+//            json
+            
             
             
             
