@@ -67,7 +67,11 @@ public class SelectCantidate {
 		
 		
 		}catch(SQLException e) {
+<<<<<<< HEAD
 			throw new Exception("Something unexpected happened. Please contact the admin.");
+=======
+			
+>>>>>>> 3aa322f111c81216b357cf31a0a9b39dfab3987b
 		}
 	}
 }
