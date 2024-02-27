@@ -1,14 +1,9 @@
 package org.servlet.panalist;
 
-import jakarta.servlet.http.HttpFilter;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 import org.apache.log4j.Logger;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.recruitment.users.Panelist;
 import org.recruitment.users.PanelistManager;
@@ -21,9 +16,7 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -56,7 +49,7 @@ public class CreateOpeningFilter extends HttpFilter implements Filter {
 		// place your code here
 		
 		
-		Logger log = CommonLogger.getCommon().getLogger(CreateOpeningFilter.class);
+//		Logger log = CommonLogger.getCommon().getLogger(CreateOpeningFilter.class);
 		
 		// pass the request along the filter chain
 //		chain.doFilter(request, response);
@@ -77,7 +70,7 @@ public class CreateOpeningFilter extends HttpFilter implements Filter {
 			}
 			br.mark(4096);
 			br.reset();
-			log.info("jsonCreated");
+//			log.info("jsonCreated");
 			jsonData = new JSONObject(jsonLoad.toString());
 			
 //			String title = jsonData.getString()
@@ -93,6 +86,12 @@ public class CreateOpeningFilter extends HttpFilter implements Filter {
 		                panelistJson.getString("organistion"), // Fixed typo: organistion -> organization
 		                panelistJson.getString("department")
 		            );
+			 
+			 
+			 
+			 
+			 
+			 
 			 if(PanelistManager.getPanelistManger().isPanelistExist(panelist)) {
 				 
 				 httpRequest.setAttribute("JSON",jsonData.toString() );
@@ -106,7 +105,7 @@ public class CreateOpeningFilter extends HttpFilter implements Filter {
 				jsonData = new JSONObject();
 				jsonData.put("status", 500);
 				jsonData.put("error", e.getMessage());
-				log.error("Error in Filter"+e.getMessage());
+//				log.error("Error in Filter"+e.getMessage());
 				response.getWriter().write(jsonData.toString());
 			} catch (Exception e2) {
 				

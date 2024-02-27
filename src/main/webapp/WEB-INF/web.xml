@@ -26,6 +26,20 @@
 		<servlet-name>CreateOpening</servlet-name>
 		<servlet-class>org.servlet.panalist.CreateOpening</servlet-class>
 	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>AddTestToOpening</display-name>
+		<servlet-name>AddTestToOpening</servlet-name>
+		<servlet-class>org.servlet.panalist.AddTestToOpening</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>CandidateSelection</display-name>
+		<servlet-name>CandidateSelection</servlet-name>
+		<servlet-class>org.servlet.panalist.CandidateSelection</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>AddSkillToApplicant</servlet-name>
 		<url-pattern>/AddSkillToApplicant</url-pattern>
@@ -33,6 +47,14 @@
 	<servlet-mapping>
 		<servlet-name>CreateOpening</servlet-name>
 		<url-pattern>/CreateOpening</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AddTestToOpening</servlet-name>
+		<url-pattern>/AddTestToOpening</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CandidateSelection</servlet-name>
+		<url-pattern>/CandidateSelection</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

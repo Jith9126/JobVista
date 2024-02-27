@@ -3,15 +3,21 @@ package org.servlet.panalist;
 import java.awt.Panel;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.recruitment.jobs.Openings;
 import org.recruitment.users.Panelist;
 import org.recruitment.users.PanelistManager;
 import org.util.CommonLogger;
 import org.util.Gender;
+
+import com.mysql.cj.xdevapi.JsonArray;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -73,6 +79,19 @@ public class CreateOpening extends HttpServlet {
                 panelistJson.getString("organistion"), // Fixed typo: organistion -> organization
                 panelistJson.getString("department")
             );
+            
+            
+            List <Panelist> interviwers = new ArrayList<Panelist>();
+            JSONArray interviwersJsonArr = openingJson.getJSONArray("interviewers");
+//            System.out.println(interviwersJsonArr.length());
+            
+            for (int i = 0; i < interviwersJsonArr.length(); i++) {
+            	JSONObject interviwerJson = interviwersJsonArr.getJSONObject(i);
+            	interviwers.add(new Panelist(interviwerJson.getString("name"), interviwerJson.getString("email")));
+			}
+            
+//            System.out.println(interviwers.size());
+            
 
             Openings opening = new Openings(
                 openingJson.getString("title"),
@@ -85,7 +104,7 @@ public class CreateOpening extends HttpServlet {
 
             logger.info("Creating panelist and opening objects.");
 
-            int OpeningId = PanelistManager.getPanelistManger().addOpening(panelist, opening);
+            int OpeningId = PanelistManager.getPanelistManger().addOpening(panelist, opening , interviwers);
 
             logger.info("Opening added successfully.");
             

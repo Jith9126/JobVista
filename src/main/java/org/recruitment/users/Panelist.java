@@ -18,10 +18,15 @@ public class Panelist {
 		this.position = position;
 	}
 	
+	public Panelist(String name, String email) {
+		this.name = name;
+		this.email = email;
+	}
+	
 	
 	
 	public Panelist(String name, String email, Gender gender, String position, String organistion, String department) {
-		super();
+		
 		this.name = name;
 		this.email = email;
 		this.gender = gender;

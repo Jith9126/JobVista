@@ -5,7 +5,7 @@ import org.recruitment.users.Applicant;
 public class Result {
 	private Applicant Applicant;
 	private Test test;
-	private int rankOfSeeker;
+	private int points;
 	private boolean selectedOrNot;
 	
 	public Applicant getApplicant() {
@@ -20,11 +20,11 @@ public class Result {
 	public void setTestId(Test test) {
 		this.test = test;
 	}
-	public int getRankOfSeeker() {
-		return rankOfSeeker;
+	public int getpoints() {
+		return points;
 	}
-	public void setRankOfSeeker(int rankOfSeeker) {
-		this.rankOfSeeker = rankOfSeeker;
+	public void setpoints(int points) {
+		this.points = points;
 	}
 	public boolean isSelectedOrNot() {
 		return selectedOrNot;
@@ -33,10 +33,17 @@ public class Result {
 		this.selectedOrNot = selectedOrNot;
 	}
 	
-	public Result(Applicant Applicant, Test test, int rankOfSeeker, boolean selectedOrNot) {
+	public Result(Applicant Applicant, Test test, int points, boolean selectedOrNot) {
 		this.Applicant = Applicant;
 		this.test = test;
-		this.rankOfSeeker = rankOfSeeker;
+		this.points = points;
 		this.selectedOrNot = selectedOrNot;
+	}
+	
+	
+	public Result(String name, String email, int points) {
+		this.Applicant = new Applicant(name, email);
+		this.points = points;
+
 	}
 }

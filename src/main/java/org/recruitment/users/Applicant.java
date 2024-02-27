@@ -13,13 +13,6 @@ import org.util.Gender;
 public class Applicant {
 	private String name;
 	private String email;
-	public String getName() {
-		return name;
-	}
-	public String getEmail() {
-		return email;
-	}
-
 	private Date Dob;
 	private Gender gender;
 	private int experience;
@@ -29,6 +22,16 @@ public class Applicant {
 	private String photo;
 	private List<SocialMedia> sources;
 	private List<Skill> skills;
+	
+	
+	public String getName() {
+		return name;
+	}
+	public String getEmail() {
+		return email;
+	}
+
+	
 	
 
 	public Date getDob() {

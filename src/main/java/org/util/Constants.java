@@ -13,4 +13,33 @@ public class Constants {
 	
 	
 	public static String insertIntoOpenings = "INSERT INTO Openings (Opening_Id, Department_Id, Description, Experience, Qualification, Departments, EmploymentType, SalaryRange, Panelist_Id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public static String assignPanelistToOpenings = "INSERT INTO OpeningAndPanelist (Panelist_Id, Opening_Id) VALUES ((SELECT Panelist_Id FROM Panelist WHERE Name like ? AND Email like ?),(SELECT Opening_Id FROM Openings WHERE Opening_Id = ?))";
+	
+	
+	
+	//For Adding Test
+	
+	public static String selectCoutOfTemp = "SELECT COUNT(*) AS NumberOfTemplates FROM `Template` WHERE Opening_Id = ? GROUP BY Opening_Id";
+	
+	public static String addNewTempToOpening = "INSERT INTO `Template` (`Opening_Id`, `TypeOfTest`, `RoundOn`) VALUES (?, ?, ?);";
+	public static String addNewTestOpening = "INSERT INTO `Test` (`Opening_Id`, `Date`, `Title`, `Duration`, `TemplateId`) VALUES (?, ?, ?, ?, (select Template_Id from `Template` where `Opening_Id` = ? and `RoundOn` = ?))";
+	
+	
+	
+	public static String updateStartDateInOpening = "UPDATE `Openings` SET `Start_Date` = ? WHERE `Opening_Id` = ?";
+	
+	
+	
+	//for choosing a candidate
+	public static String testIdFromTileAndOpeningId = "SELECT Test_Id FROM `Test` WHERE `Title` like ? and `Opening_Id` = ?";
+	public static String applicantFromMailAndName = "SELECT * FROM `Job_Seeker` WHERE `Name`= ? and `Email` = ?";
+	
+	
+	
+	public static String giveResultToApplicant  = "INSERT INTO `Result` (`Job_Seeker_Id`, `Test_Id`, `Status`,`Points`) VALUES (?, ?, ?, ?)";
+	
+	
+	
+	
+	
 }
