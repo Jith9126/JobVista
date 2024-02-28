@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.recruitment.organization.AdminManagement;
@@ -72,7 +73,7 @@ public class GetOpeningsWithDepartment extends HttpServlet {
 	        
 	        JSONObject jsonObject = new JSONObject(sb.toString());
 	        int departmentId = jsonObject.getInt("departmentId");
-	        JSONObject openingsData = adminManagement.getOpeningsWithDepartment(departmentId);
+	        JSONArray openingsData = adminManagement.getOpeningsWithDepartment(departmentId);
 	        responseData.put("statusCode", 200);
 	        responseData.put("openingsData", openingsData);
 	        

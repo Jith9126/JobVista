@@ -68,7 +68,7 @@ public class AdminManagement {
 		
 	}
 	
-	public JSONObject getPanelists(int orgId) throws SQLException {
+	public JSONArray getPanelists(int orgId) throws SQLException, JSONException {
 	    
 		ConnectionClass db = ConnectionClass.CreateCon();
 	    Connection connection = db.getConnection();
@@ -77,31 +77,26 @@ public class AdminManagement {
 	    preparedStatement.setInt(1, orgId);
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
-	    JSONObject jsonObject = new JSONObject();
+	    JSONArray jsonResult = new JSONArray();
 	    
 	    while (resultSet.next()) {
 	        
 	    	int id = resultSet.getInt("Panelist_Id");
-	        JSONArray detailsArray = new JSONArray();
-	        detailsArray.put(id);
-	        detailsArray.put(resultSet.getString("Name"));
-	        detailsArray.put(resultSet.getString("Email"));
-	        detailsArray.put(resultSet.getString("Gender"));
-	        detailsArray.put(resultSet.getString("Position"));
-	        detailsArray.put(resultSet.getString("Title"));
-	       
-			try {
-				jsonObject.put("panelist_" + id, detailsArray);
-			} 
-			catch (JSONException e) {
-				e.printStackTrace();
-			}
+	        JSONObject details = new JSONObject();
+	        details.put("id",id);
+	        details.put("Name",resultSet.getString("Name"));
+	        details.put("Email",resultSet.getString("Email"));
+	        details.put("Gender",resultSet.getString("Gender"));
+	        details.put("Position",resultSet.getString("Position"));
+	        details.put("Title",resultSet.getString("Title"));
+	      
+			jsonResult.put(details);
 	    }
 	    
-	    return jsonObject;
+	    return jsonResult;
 	}
 	
-	public JSONObject getPanelistsWithDepartment(int orgId, int departmentId) throws SQLException {
+	public JSONArray getPanelistsWithDepartment(int orgId, int departmentId) throws SQLException, JSONException {
 	   
 		ConnectionClass db = ConnectionClass.CreateCon();
 	    Connection connection = db.getConnection();
@@ -111,31 +106,26 @@ public class AdminManagement {
 	    preparedStatement.setInt(2, departmentId);
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
-	    JSONObject jsonObject = new JSONObject();
+	    JSONArray jsonResult = new JSONArray();
 	    
 	    while (resultSet.next()) {
 	        
 	    	int id = resultSet.getInt("Panelist_Id");
-	    	JSONArray detailsArray = new JSONArray();
-	        detailsArray.put(id);
-	        detailsArray.put(resultSet.getString("Name"));
-	        detailsArray.put(resultSet.getString("Email"));
-	        detailsArray.put(resultSet.getString("Gender"));
-	        detailsArray.put(resultSet.getString("Position"));
-	        detailsArray.put(resultSet.getString("Title"));
-	       
-	        try {
-				jsonObject.put("panelist_" + id, detailsArray);
-			} 
-	        catch (JSONException e) {
-				e.printStackTrace();
-			}
+	        JSONObject details = new JSONObject();
+	        details.put("id",id);
+	        details.put("Name",resultSet.getString("Name"));
+	        details.put("Email",resultSet.getString("Email"));
+	        details.put("Gender",resultSet.getString("Gender"));
+	        details.put("Position",resultSet.getString("Position"));
+	        details.put("Title",resultSet.getString("Title"));
+	      
+			jsonResult.put(details);
 	    }
 	    
-	    return jsonObject;
+	    return jsonResult;
 	}
 	
-	public JSONObject getPanelistWithName(int panelistId) throws SQLException {
+	public JSONArray getPanelistWithName(int panelistId) throws SQLException, JSONException {
 	   
 		ConnectionClass db = ConnectionClass.CreateCon();
 	    Connection connection = db.getConnection();
@@ -144,28 +134,23 @@ public class AdminManagement {
 	    preparedStatement.setInt(1, panelistId);
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
-	    JSONObject jsonObject = new JSONObject();
+	    JSONArray jsonResult = new JSONArray();
 	    
 	    while (resultSet.next()) {
 	        
 	    	int id = resultSet.getInt("Panelist_Id");
-	    	JSONArray detailsArray = new JSONArray();
-	        detailsArray.put(id);
-	        detailsArray.put(resultSet.getString("Name"));
-	        detailsArray.put(resultSet.getString("Email"));
-	        detailsArray.put(resultSet.getString("Gender"));
-	        detailsArray.put(resultSet.getString("Position"));
-	        detailsArray.put(resultSet.getString("Title"));
-	       
-	        try {
-				jsonObject.put("panelist_" + id, detailsArray);
-			} 
-	        catch (JSONException e) {
-				e.printStackTrace();
-			}
+	        JSONObject details = new JSONObject();
+	        details.put("id",id);
+	        details.put("Name",resultSet.getString("Name"));
+	        details.put("Email",resultSet.getString("Email"));
+	        details.put("Gender",resultSet.getString("Gender"));
+	        details.put("Position",resultSet.getString("Position"));
+	        details.put("Title",resultSet.getString("Title"));
+	      
+			jsonResult.put(details);
 	    }
 	    
-	    return jsonObject;
+	    return jsonResult;
 	}
 	
 	public boolean editPanelist(int panelistId, JSONObject panelistDetails) throws JSONException, SQLException {
@@ -227,7 +212,7 @@ public class AdminManagement {
 		
 	}
 	
-	public JSONObject getDepartments(int orgId) throws SQLException {
+	public JSONArray getDepartments(int orgId) throws SQLException, JSONException {
 	    ConnectionClass db = ConnectionClass.CreateCon();
 	    Connection connection = db.getConnection();
 	    
@@ -235,28 +220,23 @@ public class AdminManagement {
 	    preparedStatement.setInt(1, orgId);
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
-	    JSONObject jsonObject = new JSONObject();
+	    JSONArray jsonResult = new JSONArray();
 	    
 	    while (resultSet.next()) {
 	        
 	    	int id = resultSet.getInt("Department_Id");
-	    	JSONArray detailsArray = new JSONArray();
-	        detailsArray.put(id);
-	        detailsArray.put(resultSet.getString("Title"));
-	        detailsArray.put(resultSet.getString("Description"));
-	        
-	        try {
-				jsonObject.put("department_" + id, detailsArray);
-			} 
-	        catch (JSONException e) {
-				e.printStackTrace();
-			}
+	    	JSONObject details = new JSONObject();
+	        details.put("id",id);
+	        details.put("Title",resultSet.getString("Title"));
+	        details.put("Description",resultSet.getString("Description"));
+	       
+			jsonResult.put(details);
 	    }
 	    
-	    return jsonObject;
+	    return jsonResult;
 	}
 	
-	public JSONObject getOpenings(int orgId) throws SQLException {
+	public JSONArray getOpenings(int orgId) throws SQLException, JSONException {
 		ConnectionClass db = ConnectionClass.CreateCon();
 	    Connection connection = db.getConnection();
 	    
@@ -264,37 +244,31 @@ public class AdminManagement {
 	    preparedStatement.setInt(1, orgId);
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
-	    JSONObject jsonObject = new JSONObject();
+	    JSONArray jsonResult = new JSONArray();
 	    
 	    while (resultSet.next()) {
 	        
 	    	int id = resultSet.getInt("Opening_Id");
-	    	JSONArray detailsArray = new JSONArray();
-	        detailsArray.put(id);
-	        detailsArray.put(resultSet.getInt("Panelist.Panelist_Id"));
-	        detailsArray.put(resultSet.getString("Description"));
-	        detailsArray.put(resultSet.getInt("Experience"));
-	        detailsArray.put(resultSet.getString("Qualification"));
-	        detailsArray.put(resultSet.getString("Departments"));
-	        detailsArray.put(resultSet.getString("EmploymentType"));
-	        detailsArray.put(resultSet.getString("SalaryRange"));
-	        detailsArray.put(resultSet.getString("Panelist.Name"));
-	        detailsArray.put(resultSet.getString("Start_Date"));
-	        detailsArray.put(resultSet.getString("End_Date"));
+	    	JSONObject details = new JSONObject();
+	        details.put("id",id);
+	        details.put("Panelist_Id",resultSet.getInt("Panelist.Panelist_Id"));
+	        details.put("Description",resultSet.getString("Description"));
+	        details.put("Experience",resultSet.getInt("Experience"));
+	        details.put("Qualification",resultSet.getString("Qualification"));
+	        details.put("Departments",resultSet.getString("Departments"));
+	        details.put("EmploymentType",resultSet.getString("EmploymentType"));
+	        details.put("SalaryRange",resultSet.getString("SalaryRange"));
+	        details.put("Name",resultSet.getString("Panelist.Name"));
+	        details.put("Start_Date",resultSet.getString("Start_Date"));
+	        details.put("End_Date",resultSet.getString("End_Date"));
 	        
-	        
-	        try {
-				jsonObject.put("opening_" + id, detailsArray);
-			} 
-	        catch (JSONException e) {
-				e.printStackTrace();
-			}
+			jsonResult.put(details);
 	    }
 	    
-	    return jsonObject;
+	    return jsonResult;
 	}
 	
-	public JSONObject getOpeningsWithDepartment(int departmentId) throws SQLException {
+	public JSONArray getOpeningsWithDepartment(int departmentId) throws SQLException, JSONException {
 		ConnectionClass db = ConnectionClass.CreateCon();
 	    Connection connection = db.getConnection();
 	    
@@ -302,37 +276,31 @@ public class AdminManagement {
 	    preparedStatement.setInt(1, departmentId);
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
-	    JSONObject jsonObject = new JSONObject();
+	    JSONArray jsonResult = new JSONArray();
 	    
 	    while (resultSet.next()) {
 	        
 	    	int id = resultSet.getInt("Opening_Id");
-	    	JSONArray detailsArray = new JSONArray();
-	        detailsArray.put(id);
-	        detailsArray.put(resultSet.getInt("Panelist.Panelist_Id"));
-	        detailsArray.put(resultSet.getString("Description"));
-	        detailsArray.put(resultSet.getInt("Experience"));
-	        detailsArray.put(resultSet.getString("Qualification"));
-	        detailsArray.put(resultSet.getString("Departments"));
-	        detailsArray.put(resultSet.getString("EmploymentType"));
-	        detailsArray.put(resultSet.getString("SalaryRange"));
-	        detailsArray.put(resultSet.getString("Panelist.Name"));
-	        detailsArray.put(resultSet.getString("Start_Date"));
-	        detailsArray.put(resultSet.getString("End_Date"));
+	    	JSONObject details = new JSONObject();
+	        details.put("id",id);
+	        details.put("Panelist_Id",resultSet.getInt("Panelist.Panelist_Id"));
+	        details.put("Description",resultSet.getString("Description"));
+	        details.put("Experience",resultSet.getInt("Experience"));
+	        details.put("Qualification",resultSet.getString("Qualification"));
+	        details.put("Departments",resultSet.getString("Departments"));
+	        details.put("EmploymentType",resultSet.getString("EmploymentType"));
+	        details.put("SalaryRange",resultSet.getString("SalaryRange"));
+	        details.put("Name",resultSet.getString("Panelist.Name"));
+	        details.put("Start_Date",resultSet.getString("Start_Date"));
+	        details.put("End_Date",resultSet.getString("End_Date"));
 	        
-	        
-	        try {
-				jsonObject.put("opening_" + id, detailsArray);
-			} 
-	        catch (JSONException e) {
-				e.printStackTrace();
-			}
+			jsonResult.put(details);
 	    }
 	    
-	    return jsonObject;
+	    return jsonResult;
 	}
 	
-	public JSONObject getCurrentOpenings(int orgId) throws SQLException {
+	public JSONArray getCurrentOpenings(int orgId) throws SQLException, JSONException {
 		ConnectionClass db = ConnectionClass.CreateCon();
 	    Connection connection = db.getConnection();
 	    LocalDate today = LocalDate.now();
@@ -343,34 +311,28 @@ public class AdminManagement {
 	    preparedStatement.setDate(2, sqlDate);
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
-	    JSONObject jsonObject = new JSONObject();
+	    JSONArray jsonResult = new JSONArray();
 	    
 	    while (resultSet.next()) {
 	        
 	    	int id = resultSet.getInt("Opening_Id");
-	    	JSONArray detailsArray = new JSONArray();
-	        detailsArray.put(id);
-	        detailsArray.put(resultSet.getInt("Panelist.Panelist_Id"));
-	        detailsArray.put(resultSet.getString("Description"));
-	        detailsArray.put(resultSet.getInt("Experience"));
-	        detailsArray.put(resultSet.getString("Qualification"));
-	        detailsArray.put(resultSet.getString("Departments"));
-	        detailsArray.put(resultSet.getString("EmploymentType"));
-	        detailsArray.put(resultSet.getString("SalaryRange"));
-	        detailsArray.put(resultSet.getString("Panelist.Name"));
-	        detailsArray.put(resultSet.getString("Start_Date"));
-	        detailsArray.put(resultSet.getString("End_Date"));
+	    	JSONObject details = new JSONObject();
+	        details.put("id",id);
+	        details.put("Panelist_Id",resultSet.getInt("Panelist.Panelist_Id"));
+	        details.put("Description",resultSet.getString("Description"));
+	        details.put("Experience",resultSet.getInt("Experience"));
+	        details.put("Qualification",resultSet.getString("Qualification"));
+	        details.put("Departments",resultSet.getString("Departments"));
+	        details.put("EmploymentType",resultSet.getString("EmploymentType"));
+	        details.put("SalaryRange",resultSet.getString("SalaryRange"));
+	        details.put("Name",resultSet.getString("Panelist.Name"));
+	        details.put("Start_Date",resultSet.getString("Start_Date"));
+	        details.put("End_Date",resultSet.getString("End_Date"));
 	        
-	        
-	        try {
-				jsonObject.put("opening_" + id, detailsArray);
-			} 
-	        catch (JSONException e) {
-				e.printStackTrace();
-			}
+			jsonResult.put(details);
 	    }
 	    
-	    return jsonObject;
+	    return jsonResult;
 	}
 	
 	public JSONObject getOpeningGraphWithDepartments(int org_id) throws SQLException, JSONException {
@@ -462,12 +424,72 @@ public class AdminManagement {
 		    return json;
 	}
 	
-	
-	public JSONObject seeApplicants(int openingId, String Status) throws SQLException {
+	public JSONObject differenceInYearByOpenings(int orgId) throws SQLException, JSONException {
 		
 		ConnectionClass db = ConnectionClass.CreateCon();
 		Connection connection = db.getConnection();
-		JSONObject json = new JSONObject();
+		
+		String query = "select year(Openings.Start_Date) as year, count(*) as count from Openings join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and year(Openings.Start_Date) in (year(current_date()), year(current_date()) - 1) group by year(Start_Date)";
+		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		preparedStatement.setInt(1, orgId);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		
+		JSONObject jsonObject = new JSONObject();
+		
+		 int current = 0;
+         int previous = 0;
+
+         while (resultSet.next()) {
+             int year = resultSet.getInt("year");
+             int count = resultSet.getInt("count");
+             
+             if (year == java.time.LocalDate.now().getYear()) {
+                 current = count;
+             } else if (year == java.time.LocalDate.now().getYear() - 1) {
+                 previous = count;
+             }
+         }
+         
+         double percentage = ((double) (current - previous) / previous) * 100;
+         jsonObject.put("percentage", percentage+"");
+         return jsonObject;
+	}	
+	
+	
+	public JSONObject differenceInMonthByHired(int orgId) throws SQLException, JSONException {
+		
+		ConnectionClass db = ConnectionClass.CreateCon();
+		Connection connection = db.getConnection();
+		
+		String query = "select month(Openings.Start_Date) as month, count(*) as count from Result join Openings on Openings.Opening_Id = Result.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' and month(Openings.Start_Date) in (month(current_date()), month(current_date()) - 1) group by month(Openings.Start_Date)";
+		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		preparedStatement.setInt(1, orgId);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		
+		JSONObject jsonObject = new JSONObject();
+		int current = 0;
+        int previous = 0;
+        while (resultSet.next()) {
+            int month = resultSet.getInt("month");
+            int count = resultSet.getInt("count");
+            if (month == java.time.LocalDate.now().getMonthValue()) {
+                current = count;
+            } else if (month == java.time.LocalDate.now().getMonthValue() - 1) {
+                previous = count;
+            }
+        }
+        
+        double percentage = ((double) (current - previous) / previous) * 100;
+        jsonObject.put("percentage", percentage+"");
+        return jsonObject;
+	}	
+	
+	
+	public JSONArray seeApplicants(int openingId, String Status) throws SQLException, JSONException {
+		
+		ConnectionClass db = ConnectionClass.CreateCon();
+		Connection connection = db.getConnection();
+		JSONArray json = new JSONArray();
 		
 		PreparedStatement preparedStatement = connection.prepareStatement(Constants.getApplicants);
 		preparedStatement.setString(1, Status);
@@ -476,22 +498,18 @@ public class AdminManagement {
 		while(resultSet.next()) {
 
 			int id = resultSet.getInt("Job_Seeker_Id");
-	    	JSONArray detailsArray = new JSONArray();
-	        detailsArray.put(id);
-	        detailsArray.put(resultSet.getString("Name"));
-	        detailsArray.put(resultSet.getString("Email"));
-	        detailsArray.put(resultSet.getDate("DOB"));
-	        detailsArray.put(resultSet.getString("Gender"));
-	        detailsArray.put(resultSet.getInt("Experience"));
-	        detailsArray.put(resultSet.getString("Phone"));
-	        detailsArray.put(resultSet.getString("Qualification")); 
-	        detailsArray.put(resultSet.getString("Photo"));
-	        try {
-				json.put("applicant_" + id, detailsArray);
-			} 
-	        catch (JSONException e) {
-				e.printStackTrace();
-			}
+	    	JSONObject details = new JSONObject();
+	        details.put("id",id);
+	        details.put("Name",resultSet.getString("Name"));
+	        details.put("Email",resultSet.getString("Email"));
+	        details.put("DOB",resultSet.getDate("DOB"));
+	        details.put("Gender",resultSet.getString("Gender"));
+	        details.put("Experience",resultSet.getInt("Experience"));
+	        details.put("Phone",resultSet.getString("Phone"));
+	        details.put("Qualification",resultSet.getString("Qualification")); 
+	        details.put("Photo",resultSet.getString("Photo"));
+	        
+			json.put(details);
 		}
 		
 		return json;	

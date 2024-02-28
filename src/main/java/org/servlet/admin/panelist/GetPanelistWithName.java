@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -59,7 +60,7 @@ public class GetPanelistWithName extends HttpServlet {
         	
             JSONObject jsonObject = new JSONObject(sb.toString());
             int panelistId = jsonObject.getInt("panelistId");
-            JSONObject panelistData = adminManagement.getPanelistWithName(panelistId);
+            JSONArray panelistData = adminManagement.getPanelistWithName(panelistId);
             responseData.put("statusCode", 200);
             responseData.put("message",panelistData.toString());
             

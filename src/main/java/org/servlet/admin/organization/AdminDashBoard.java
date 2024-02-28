@@ -66,58 +66,38 @@ public class AdminDashBoard extends HttpServlet {
         }
         
         try {
-        	
-        	//Applicants
-        	JSONObject hiredApplicants = adminManagement.seeApplicants(0,"Selected");
-        	JSONObject onHoldApplicants = adminManagement.seeApplicants(0,"Onhold");
-        	JSONObject rejectedApplicants = adminManagement.seeApplicants(0,"Rejected");
-        	
-        	//Openings
-        	JSONObject currentOpenings = adminManagement.getCurrentOpenings(Integer.parseInt(orgId));
-        	JSONObject openings = adminManagement.getOpenings(Integer.parseInt(orgId));
-        	
-        	//Panelists
-        	JSONObject panelist = adminManagement.getPanelistsWithDepartment(Integer.parseInt(orgId), 0);
-        	
-        	//Departments
-        	JSONObject departments = adminManagement.getDepartments(Integer.parseInt(orgId));
-        	
-        	JSONObject combinedJSON = new JSONObject();
+        
+        	JSONArray departments = adminManagement.getDepartments(Integer.parseInt(orgId));
+        	JSONObject jsonResponse = new JSONObject();
+        	JSONArray departmentArray = new JSONArray();
 
-        	JSONArray panelistsArray = new JSONArray();
-        	panelistsArray.put(panelist);
-        	
-        	JSONArray departmentsArray = new JSONArray();
-        	departmentsArray.put(departments);
+        	for (int i = 0; i < departments.length(); i++) {
+        	    JSONObject department = departments.getJSONObject(i);
+        	    int departmentId = department.getInt("id");
+        	    JSONArray openings = adminManagement.getOpeningsWithDepartment(departmentId);
+        	    JSONObject departmentObject = new JSONObject(department.toString());
+        	    JSONArray openingArray = new JSONArray();
+        	    
+        	    for (int j = 0; j < openings.length(); j++) {
+        	        JSONObject opening = openings.getJSONObject(j);
+        	        int openingId = opening.getInt("id");
+        	        JSONArray applicants = adminManagement.seeApplicants(openingId, "Selected");
+        	        JSONObject openingObject = new JSONObject(opening.toString());
+        	        openingObject.put("applicants", applicants);
+        	        openingArray.put(openingObject);
+        	    }
+        	    
+        	    departmentObject.put("openings", openingArray);
+        	    departmentArray.put(departmentObject);
+        	}
 
-        	JSONArray currentOpeningsArray = new JSONArray();
-        	currentOpeningsArray.put(currentOpenings);
-        	JSONArray allOpeningsArray = new JSONArray();
-        	allOpeningsArray.put(openings);
-
-        	JSONArray hiredApplicantsArray = new JSONArray();
-        	hiredApplicantsArray.put(hiredApplicants);
-        	JSONArray onHoldApplicantsArray = new JSONArray();
-        	onHoldApplicantsArray.put(onHoldApplicants);
-        	JSONArray rejectedApplicantsArray = new JSONArray();
-        	rejectedApplicantsArray.put(rejectedApplicants);
-
-        	JSONObject organizationJSON = new JSONObject();
-        	organizationJSON.put("organization", departmentsArray);
-        	organizationJSON.put("panelist", panelistsArray);
-        	organizationJSON.put("openings", allOpeningsArray);
-
-        	JSONObject applicantsJSON = new JSONObject();
-        	applicantsJSON.put("hire", hiredApplicantsArray);
-        	applicantsJSON.put("hold", onHoldApplicantsArray);
-        	applicantsJSON.put("rejected", rejectedApplicantsArray);
-
-        	combinedJSON.put("departments", organizationJSON);
-        	combinedJSON.put("applicants", applicantsJSON);
-       	
+        	jsonResponse.put("departments", departmentArray);
         	responseData.put("statusCode", 200);
-			responseData.put("message", combinedJSON.toString());
-		} 
+        	responseData.put("message", jsonResponse.toString());
+
+		
+        }
+        
         catch (JSONException e) {
 	        
 	    	logger.error("User:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
@@ -128,7 +108,7 @@ public class AdminDashBoard extends HttpServlet {
 	    	catch (JSONException e1) {
 	    		logger.error("User:"+adminId+"\nError parsing JSON object." + e1.getMessage());
 			}
-	        
+	    	
 	    } 
 	    catch (SQLException e) {
 	      

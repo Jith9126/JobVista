@@ -89,7 +89,7 @@ public class Constants {
 	
 	public static String getOpeningGraphWithDepartments = "select Departments.Title as DepartmentTitle, count(*) as Count from Openings join Departments on Openings.Department_Id = Departments.Department_Id where Departments.Org_Id = ? group by Departments.Title";
 	
-	public static String getOpeningGraphByMonth = "select month(Start_Date) as Month, count(*) as Count from Openings join Departments on Openings.Department_Id = Departments.Department_Id where Departments.Org_Id = ? group by month(Start_Date)";
+	public static String getOpeningGraphByMonth = "select month(Start_Date) as Month, count(*) as Count from Openings join Departments on Openings.Department_Id = Departments.Department_Id where Departments.Org_Id = ? and Openings.Start_Date >= date_sub(curdate(), interval 1 year) group by month(Start_Date)";
 	 
 	public static String getApplicantsStatusGraph = "select Status, count(*) as count from Result join Openings on Openings.Opening_Id = Result.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? group by Status";	  
 
@@ -99,7 +99,7 @@ public class Constants {
 
 		// For applicants
 	
-	public static String getApplicants = "select * fro Job_Seeker join Result on Job_Seeker.Job_Seeker_Id = Result.Job_Seeker_id where Result.Status = ? And Opening_Id = ?";
+	public static String getApplicants = "select * from Job_Seeker join Result on Job_Seeker.Job_Seeker_Id = Result.Job_Seeker_id where Result.Status = ? And Result.Opening_Id = ?";
 
 	
 	

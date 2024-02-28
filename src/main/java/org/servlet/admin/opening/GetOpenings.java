@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.recruitment.organization.AdminManagement;
@@ -64,7 +65,7 @@ public class GetOpenings extends HttpServlet {
         	}
         }
         try {
-        	JSONObject openingsData = adminManagement.getOpenings(Integer.parseInt(orgId));
+        	JSONArray openingsData = adminManagement.getOpenings(Integer.parseInt(orgId));
         	responseData.put("statusCode", 200);
 			responseData.put("message", openingsData);
 		} 

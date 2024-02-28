@@ -71,6 +71,8 @@ public class Graphs extends HttpServlet {
 	        JSONObject applicantsStatusGraph = adminManagement.getApplicantsStatusGraph(Integer.parseInt(orgId));
 	        JSONObject selectedApplicantsGraphInDepartments = adminManagement.selectedApplicantsGraphInDepartments(Integer.parseInt(orgId));
 	        JSONObject selectedApplicantsGraphInMonth = adminManagement.selectedApplicantsGraphInMonth(Integer.parseInt(orgId));
+	        JSONObject differenceInYearByOpenings = adminManagement.differenceInYearByOpenings(Integer.parseInt(orgId));
+	        JSONObject differenceInMonthByHired = adminManagement.differenceInMonthByHired(Integer.parseInt(orgId));
 	        
 	        responseData.put("statusCode", 200);
 	        responseData.put("openingGraphWithDepartments", openingGraphWithDepartments);
@@ -78,6 +80,8 @@ public class Graphs extends HttpServlet {
 	        responseData.put("applicantsStatusGraph", applicantsStatusGraph);
 	        responseData.put("selectedApplicantsGraphInDepartments", selectedApplicantsGraphInDepartments);
 	        responseData.put("selectedApplicantsGraphInMonth", selectedApplicantsGraphInMonth);
+	        responseData.put("differenceInYearByOpenings", differenceInYearByOpenings);
+	        responseData.put("differenceInMonthByHired", differenceInMonthByHired);
 	        
 	        
 	    } 
@@ -86,12 +90,12 @@ public class Graphs extends HttpServlet {
 	    	logger.error("User:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
 	    	try {
 				responseData.put("statusCode", 500);
-				responseData.put("message", "Error parsing JSON object.\n");
+				responseData.put("message", "Error parsing JSON object.");
 			} 
 	    	catch (JSONException e1) {
 	    		logger.error("User:"+adminId+"\nError parsing JSON object." + e1.getMessage());
 			}
-	        
+	        e.printStackTrace();
 	    } 
 	    catch (SQLException e) {
 	      
@@ -103,7 +107,7 @@ public class Graphs extends HttpServlet {
 	    		logger.error("User: "+adminId+"\nError parsing JSON object.\n" + e1.getMessage());
 			}
 	    	logger.error("User:"+adminId+"\nError occurred while retrieving data from the database. \n"+e.getMessage());
-	        
+	        e.printStackTrace();
 	    }
 	    response.getWriter().write(responseData.toString());
 	
