@@ -22,6 +22,8 @@ public class AdminManagement {
 	
 	Logger logger = CommonLogger.getCommon().getLogger(AdminManagement.class);
 
+	
+	//This method will add the panelist
 	public String addPanelist(String name, String email, Gender gender, String position, int departmentId, int orgId) throws SQLException {
 		
 		ConnectionClass db = ConnectionClass.CreateCon();
