@@ -99,7 +99,7 @@ public class CreateOpening extends HttpServlet {
                 openingJson.getString("qualification"),
                 openingJson.getString("departments"),
                 openingJson.getString("type"),
-                openingJson.getString("salaryRange")
+                openingJson.getString("salaryRange"), null
             );
 
             logger.info("Creating panelist and opening objects.");

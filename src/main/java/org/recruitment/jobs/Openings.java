@@ -8,23 +8,26 @@ public class Openings {
     private String departments;
     private String employmentType;
     private String salaryRange;
+    private Long panelistId;
 
 
 
     public Openings( String description, int experience, String qualification, String departments,
-            String employmentType, String salaryRange) {
+            String employmentType, String salaryRange, Long panelistId) {
         this.description = description;
         this.experience = experience;
         this.qualification = qualification;
         this.departments = departments;
         this.employmentType = employmentType;
         this.salaryRange = salaryRange;
+        this.panelistId = panelistId;
     }
     
 
     public Openings( String description, String employmentType, Long panelistId) {
         this.description = description;
         this.employmentType = employmentType;
+        this.panelistId = panelistId;
     }
 
 
@@ -32,6 +35,7 @@ public class Openings {
         this.description = description;
         this.departments = departments;
         this.employmentType = employmentType;
+        this.panelistId = panelistId;
     }
 
 
@@ -93,5 +97,11 @@ public class Openings {
         this.salaryRange = salaryRange;
     }
 
+    public Long getPanelistId() {
+        return panelistId;
+    }
 
+    public void setPanelistId(Long panelistId) {
+        this.panelistId = panelistId;
+    }
 }
