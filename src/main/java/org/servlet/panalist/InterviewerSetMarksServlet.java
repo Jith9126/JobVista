@@ -2,6 +2,7 @@ package org.servlet.panalist;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.recruitment.users.InterviewerService;
 import org.util.ConnectionClass;
 
 import jakarta.servlet.ServletException;
@@ -22,32 +23,31 @@ public class InterviewerSetMarksServlet extends HttpServlet {
         JSONObject jsonResponse = new JSONObject();
         resp.setContentType("application/json");
 
-        int panelistId = Integer.parseInt(req.getParameter("panelistId"));
         int jobSeekerId = Integer.parseInt(req.getParameter("jobSeekerId"));
+        int testId = Integer.parseInt(req.getParameter("testId"));
         int marks = Integer.parseInt(req.getParameter("marks"));
+        String status = req.getParameter("status");
 
         try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
-            interviewerService.setMarks(panelistId, jobSeekerId, marks);
+            interviewerService.setMarks(jobSeekerId, testId, marks, status);
             jsonResponse.put("status", "success");
-            jsonResponse.put("message", "Marks set successfully.");
+            jsonResponse.put("message", "Marks and status set successfully.");
         } catch (SQLException e) {
             try {
 				jsonResponse.put("status", "error");
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
             try {
-				jsonResponse.put("message", "Error setting marks: " + e.getMessage());
+				jsonResponse.put("message", "Error setting marks and status: " + e.getMessage());
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
         } catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
         resp.getWriter().write(jsonResponse.toString());
     }
 }
+
