@@ -42,4 +42,65 @@ public class Constants {
 	
 	
 	
+
+	
+	// For admin 
+	
+		// For sign up
+	
+	public static String addAdmin = "insert into Admin (Name, Email, Org_Id, Password) values (?, ?, ?, ?)";
+	                                                                                           
+	public static String addOrganization = "insert into Organization (Name, TypeOfOrg, Industry, ContactEmail, ContactNumber) values (?, ?, ?, ?, ?";
+	public static String getOrgId = "select Org_Id from Organization where Name = ?";
+	
+		// For panelist management
+	
+	public static String isPanelistExists = "select * from Panelist where Email = ? and Org_Id = ?";
+	public static String addPanelist = "insert into Panelist (Name, Email, Gender, Department_Id, Org_Id, Position) values (?, ?, ?, ?, ?, ?)";
+	
+	public static String removePanelist = "delete from Panelist where Panelist_Id = ?";
+	
+	public static String getPanelist = "select Panelist.*, Departments.Title from Panelist join Departments on Departments.Department_Id = Panelist.Department_Id where Departments.Org_Id = ?";
+	
+	public static String getPanelistWithDepartment = "select Panelist.*, Departments.Title from Panelist join Departments on Departments.Department_Id = Panelist.Department_Id where Departments.Org_Id = ? and Departments.Department_Id = ?";
+
+	public static  String getPanelistWithName = "select Panelist.*, Departments.Title from Panelist join Departments on Departments.Department_Id = Panelist.Department_Id where Panelist_Id = ?";
+
+	public static String editPanelist = "update Panelist set Name=?, Email=?, Position=? where Panelist_Id = ?"; 
+
+		// For department
+	
+	public static String isDepartmentExists = "select * from Departments where  title = ? and Org_Id = ?";
+	public static String addDepartment = "insert into Departments (Title, Org_Id, Description) values (?, ?, ?)";
+
+	public static String removeDepartment = "delete from Departments where Department_Id = ?";
+
+	public static  String getDepartments = "select * from Departments where Org_Id = ?";
+	
+		// For openings
+	
+	public static String getOpenings = "select Openings.*, Panelist.* from Openings join Panelist on Panelist.Panelist_Id = Openings.Panelist_Id join Departments on Departments.Department_Id = Panelist.Department_Id where Departments.Org_Id = ?";
+	
+	public static String getOpeningsWithDepartment = "select Openings.*, Panelist.* from Openings join Panelist on Panelist.Panelist_Id = Openings.Panelist_Id where Panelist.Department_Id = ?";
+
+	public static  String getCurrentOpenings = "select Openings.*, Panelist.Name from Openings join Panelist on Panelist.Panelist_Id = Openings.Panelist_Id join Departments on Departments.Department_Id = Panelist.Department_Id where Departments.Org_Id = ? and ? between Start_Date AND End_Date";
+
+		// For graph
+	
+	public static String getOpeningGraphWithDepartments = "select Departments.Title as DepartmentTitle, count(*) as Count from Openings join Departments on Openings.Department_Id = Departments.Department_Id where Departments.Org_Id = ? group by Departments.Title";
+	
+	public static String getOpeningGraphByMonth = "select month(Start_Date) as Month, count(*) as Count from Openings join Departments on Openings.Department_Id = Departments.Department_Id where Departments.Org_Id = ? group by month(Start_Date)";
+	 
+	public static String getApplicantsStatusGraph = "select Status, count(*) as count from Result join Openings on Openings.Opening_Id = Result.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? group by Status";	  
+
+	public static String selectedApplicantsGraphInDepartments = "select Departments.Title, count(*) from Result join Openings on Openings.Opening_Id = Result.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' Group by Departments.Title";
+
+	public static  String selectedApplicantsGraphInMonth = "select month(Openings.Start_Date) as month, count(*) from Result join Openings on Openings.Opening_Id = Result.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' and Openings.Start_Date >= date_sub(curdate(), interval 1 year) Group by month(Openings.Start_Date)";
+
+		// For applicants
+	
+	public static String getApplicants = "select * fro Job_Seeker join Result on Job_Seeker.Job_Seeker_Id = Result.Job_Seeker_id where Result.Status = ? And Opening_Id = ?";
+
+	
+	
 }
