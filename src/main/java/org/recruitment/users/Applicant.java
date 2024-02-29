@@ -163,17 +163,12 @@ public class Applicant {
 		return rowsAffected > 0;
 	}
 	
-	void seeOpenings() {
-		
-	}
-	
-	boolean seeResult(String name) {
-		return false;
-		
-	}
-	
-	public static void main(String[] args) {
-		Applicant job = new Applicant("Michael Johnson", "michaeljohnson@gmail.com");
-		System.out.println(job.applyForJob("Michael Johnson", "michaeljohnson@gmail.com", 1));
-	}
+//	void seeOpenings() {
+//		
+//	}
+//	
+//	boolean seeResult(String name) {
+//		return false;
+//		
+//	}
 }
