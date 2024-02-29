@@ -2,6 +2,7 @@ package org.servlet.panalist;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.recruitment.users.InterviewerService;
 import org.util.ConnectionClass;
 
 import jakarta.servlet.ServletException;
@@ -25,9 +26,10 @@ public class InterviewerAddReviewServlet extends HttpServlet {
         int panelistId = Integer.parseInt(req.getParameter("panelistId"));
         int jobSeekerId = Integer.parseInt(req.getParameter("jobSeekerId"));
         String review = req.getParameter("review");
+        int points = Integer.parseInt(req.getParameter("points"));
 
         try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
-            interviewerService.addReview(panelistId, jobSeekerId, review);
+            interviewerService.addReview(panelistId, jobSeekerId, review, points);
             jsonResponse.put("status", "success");
             jsonResponse.put("message", "Review added successfully.");
         } catch (SQLException e) {
