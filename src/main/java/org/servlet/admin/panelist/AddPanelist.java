@@ -83,9 +83,10 @@ public class AddPanelist extends HttpServlet {
             String genderStr = jsonObject.getString("gender");
             Gender  gender = Gender.valueOf(genderStr.toUpperCase());
             String position = jsonObject.getString("position");
+            String password = jsonObject.getString("password");
             int departmentId = jsonObject.getInt("departmentId");
             responseData.put("statusCode", 200);
-            responseData.put("message",adminManagement.addPanelist(name, email, gender, position, departmentId, Integer.parseInt(orgId)));
+            responseData.put("message",adminManagement.addPanelist(name, email, gender, position, password, departmentId, Integer.parseInt(orgId)));
         
         }
         

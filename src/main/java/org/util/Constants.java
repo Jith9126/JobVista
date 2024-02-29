@@ -57,6 +57,7 @@ public class Constants {
 	
 	public static String isPanelistExists = "select * from Panelist where Email = ? and Org_Id = ?";
 	public static String addPanelist = "insert into Panelist (Name, Email, Gender, Department_Id, Org_Id, Position) values (?, ?, ?, ?, ?, ?)";
+	public static String addUser = "insert into Users (Role, Password, Email) values (?, ?, ?)";
 	
 	public static String removePanelist = "delete from Panelist where Panelist_Id = ?";
 	
@@ -103,4 +104,9 @@ public class Constants {
 
 	
 	
+	// For login
+	
+	public static String checkUser = "select * from Users where Email = ? and Password = ?";
+	
+	public static String updateSession = "update Users set Session_Id = ? where Email = ?";
 }

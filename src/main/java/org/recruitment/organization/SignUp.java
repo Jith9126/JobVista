@@ -23,8 +23,16 @@ public class SignUp {
 		preparedStatement.setString(4, password);
 		int affectedRows = preparedStatement.executeUpdate();
 		if (affectedRows <=0 ) {
-			logger.info("Failed to add admin");
-			return "Failed to add Admin";
+			preparedStatement = connection.prepareStatement(Constants.addUser);
+			preparedStatement.setString(1, "Admin");
+			preparedStatement.setString(2, password);
+			preparedStatement.setString(3, email);
+			int addUser = preparedStatement.executeUpdate();
+			
+			if(addUser>0) {
+				logger.info("Failed to add admin");
+				return "Failed to add Admin";
+			}
 		}
 		logger.info("Admin sucessfully added");
 		return "Admin successfully added";

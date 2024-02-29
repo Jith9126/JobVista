@@ -65,9 +65,23 @@ public class GetOpenings extends HttpServlet {
         	}
         }
         try {
-        	JSONArray openingsData = adminManagement.getOpenings(Integer.parseInt(orgId));
-        	responseData.put("statusCode", 200);
-			responseData.put("message", openingsData);
+        	JSONArray openings = adminManagement.getOpenings(Integer.parseInt(orgId));
+            JSONArray openingArray = new JSONArray();
+            
+            for (int j = 0; j < openings.length(); j++) {
+            	
+            	JSONObject opening = openings.getJSONObject(j);
+     	        int openingId = opening.getInt("id");
+     	        JSONArray applicants = adminManagement.seeApplicants(openingId, "Selected");
+     	        JSONObject openingObject = new JSONObject(opening.toString());
+     	        openingObject.put("applicants", applicants);
+     	        openingArray.put(openingObject);
+            
+            }
+            
+            responseData.put("statusCode", 200);
+            responseData.put("message", openingArray);
+            
 		} 
         catch (JSONException e) {
 	        

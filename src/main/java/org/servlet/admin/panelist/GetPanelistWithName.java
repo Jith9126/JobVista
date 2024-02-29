@@ -62,7 +62,7 @@ public class GetPanelistWithName extends HttpServlet {
             int panelistId = jsonObject.getInt("panelistId");
             JSONArray panelistData = adminManagement.getPanelistWithName(panelistId);
             responseData.put("statusCode", 200);
-            responseData.put("message",panelistData.toString());
+            responseData.put("message",panelistData);
             
         } 
         catch (JSONException e) {

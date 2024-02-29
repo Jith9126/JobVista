@@ -24,7 +24,7 @@ public class AdminManagement {
 
 	
 	//This method will add the panelist
-	public String addPanelist(String name, String email, Gender gender, String position, int departmentId, int orgId) throws SQLException {
+	public String addPanelist(String name, String email, Gender gender, String position, String password, int departmentId, int orgId) throws SQLException {
 		
 		ConnectionClass db = ConnectionClass.CreateCon();
 		Connection connection = db.getConnection();
@@ -37,6 +37,8 @@ public class AdminManagement {
 			return "Panelist already exists";
 		}
 		
+		
+		
 		PreparedStatement preparedStatement = connection.prepareStatement(Constants.addPanelist);
 		preparedStatement.setString(1, name);
 		preparedStatement.setString(2, email);
@@ -47,8 +49,16 @@ public class AdminManagement {
         int affectedRows = preparedStatement.executeUpdate();
 		
 		if(affectedRows > 0) {
-			logger.info("Panelist added");
-			return "Panelist added";
+			preparedStatement = connection.prepareStatement(Constants.addUser);
+			preparedStatement.setString(1, "Admin");
+			preparedStatement.setString(2, password);
+			preparedStatement.setString(3, email);
+			int addUser = preparedStatement.executeUpdate();
+			
+			if(addUser>0) {
+				logger.info("Panelist added");
+				return "Panelist added";
+			}
 		}
 		logger.info("Failed to add panelist");
 		return "Failed to add panelist";
