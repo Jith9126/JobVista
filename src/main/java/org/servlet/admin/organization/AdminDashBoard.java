@@ -93,7 +93,7 @@ public class AdminDashBoard extends HttpServlet {
 
         	jsonResponse.put("departments", departmentArray);
         	responseData.put("statusCode", 200);
-        	responseData.put("message", jsonResponse.toString());
+        	responseData.put("message", jsonResponse);
 
 		
         }

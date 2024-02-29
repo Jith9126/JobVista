@@ -440,7 +440,6 @@ public class AdminManagement {
          int previous = 0;
 
          while (resultSet.next()) {
-        	 System.out.println("get");
              int year = resultSet.getInt("year");
              int count = resultSet.getInt("count");
              
