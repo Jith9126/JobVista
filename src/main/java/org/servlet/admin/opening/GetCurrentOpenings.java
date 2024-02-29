@@ -71,13 +71,13 @@ public class GetCurrentOpenings extends HttpServlet {
 		} 
         catch (JSONException e) {
 	        
-	    	logger.error("User:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
+	    	logger.error("Admin:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
 	    	try {
 				responseData.put("statusCode", 500);
 				responseData.put("message", "Error parsing JSON object.\n");
 			} 
 	    	catch (JSONException e1) {
-	    		logger.error("User:"+adminId+"\nError parsing JSON object." + e1.getMessage());
+	    		logger.error("Admin:"+adminId+"\nError parsing JSON object." + e1.getMessage());
 			}
 	        
 	    } 
@@ -88,9 +88,9 @@ public class GetCurrentOpenings extends HttpServlet {
 				responseData.put("message", "Error occurred while retrieving data from the database.");
 			} 
 	    	catch (JSONException e1) {
-	    		logger.error("User: "+adminId+"\nError parsing JSON object.\n" + e1.getMessage());
+	    		logger.error("Admin: "+adminId+"\nError parsing JSON object.\n" + e1.getMessage());
 			}
-	    	logger.error("User:"+adminId+"\nError occurred while retrieving data from the database. \n"+e.getMessage());
+	    	logger.error("Admin:"+adminId+"\nError occurred while retrieving data from the database. \n"+e.getMessage());
 	        
 	    }
 	    

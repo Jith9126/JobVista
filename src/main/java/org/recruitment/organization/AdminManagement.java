@@ -440,6 +440,7 @@ public class AdminManagement {
          int previous = 0;
 
          while (resultSet.next()) {
+        	 System.out.println("get");
              int year = resultSet.getInt("year");
              int count = resultSet.getInt("count");
              
@@ -450,8 +451,12 @@ public class AdminManagement {
              }
          }
          
-         double percentage = ((double) (current - previous) / previous) * 100;
-         jsonObject.put("percentage", percentage+"");
+         double percentage = 0;
+         if(previous != 0) {
+        	 percentage = ((double) (current - previous) / previous) * 100;
+         }
+         
+         jsonObject.put("percentage", percentage+"%");
          return jsonObject;
 	}	
 	
@@ -474,13 +479,16 @@ public class AdminManagement {
             int count = resultSet.getInt("count");
             if (month == java.time.LocalDate.now().getMonthValue()) {
                 current = count;
-            } else if (month == java.time.LocalDate.now().getMonthValue() - 1) {
+            } else if (month == java.time.LocalDate.now().minusMonths(1).getMonthValue()) {
                 previous = count;
             }
         }
         
-        double percentage = ((double) (current - previous) / previous) * 100;
-        jsonObject.put("percentage", percentage+"");
+        double percentage = 0;
+        if(previous != 0) {
+       	 percentage = ((double) (current - previous) / previous) * 100;
+        }
+        jsonObject.put("percentage", percentage+"%");
         return jsonObject;
 	}	
 	
