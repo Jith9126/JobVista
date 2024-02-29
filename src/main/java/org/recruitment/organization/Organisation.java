@@ -5,6 +5,7 @@ import java.util.List;
 import org.recruitment.users.Panelist;
 
 public class Organisation {
+	//I am testing Ragavi's commit
 	private String name;
 	private String typeOfOrg;
 	private String industry;
