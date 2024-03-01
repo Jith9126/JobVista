@@ -12,6 +12,7 @@ import org.recruitment.tests.Test;
 import org.recruitment.tests.TestManager;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class AddTestToOpening
  */
+@WebServlet("/AddTestToOpening")
 public class AddTestToOpening extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

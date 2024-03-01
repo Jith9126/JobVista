@@ -20,6 +20,7 @@ import org.util.Gender;
 import com.mysql.cj.xdevapi.JsonArray;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,6 +28,7 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class CreateOpening
  */
+@WebServlet("/CreateOpening")
 public class CreateOpening extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
