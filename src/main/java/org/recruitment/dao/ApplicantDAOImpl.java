@@ -31,7 +31,6 @@ public class ApplicantDAOImpl implements ApplicantDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception appropriately
             return false;
         }
     }
@@ -88,6 +87,4 @@ public class ApplicantDAOImpl implements ApplicantDAO {
 		return false;
     }
 
-
-    // Other methods for data access
 }

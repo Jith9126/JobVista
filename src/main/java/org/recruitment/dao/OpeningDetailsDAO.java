@@ -34,7 +34,6 @@ public class OpeningDetailsDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception appropriately
         }
 
         return openingDetailsList;

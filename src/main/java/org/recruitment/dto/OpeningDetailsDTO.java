@@ -22,10 +22,8 @@ public class OpeningDetailsDTO {
     private OrganizationDTO organization;
     private DepartmentsDTO department;
 
-    // Constructors
 
     public OpeningDetailsDTO() {
-        // Default constructor
     }
 
     public OpeningDetailsDTO(long openingId, String description, int experience, String qualification,

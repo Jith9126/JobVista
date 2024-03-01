@@ -7,5 +7,4 @@ public interface ApplicantDAO {
     boolean addApplicant(ApplicantDTO applicantDTO);
     boolean removeApplicant(String name, String email);
     boolean applyForJob(String name, String email, int openingId);
-    // Other methods for data access
 }

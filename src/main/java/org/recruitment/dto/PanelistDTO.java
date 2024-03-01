@@ -4,6 +4,7 @@ public class PanelistDTO {
     public PanelistDTO(String string, String string2) {
 		// TODO Auto-generated constructor stub
 	}
+    
 	private int panelistId;
     private String name;
     private String email;
@@ -12,5 +13,4 @@ public class PanelistDTO {
     private int orgId;
     private String position;
 
-    // Constructors, getters, and setters
 }

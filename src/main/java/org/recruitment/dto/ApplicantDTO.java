@@ -17,7 +17,6 @@ public class ApplicantDTO {
     private List<SocialMediaDTO> sources;
     private List<SkillDTO> skills;
 
-    // Constructors, getters, and setters
 
     public ApplicantDTO(String name, String email, Date dob, Gender gender, int experience,
                         int departmentId, String phoneNo, String qualification, String photo,
@@ -122,8 +121,5 @@ public class ApplicantDTO {
 	public void setSkills(List<SkillDTO> skills) {
 		this.skills = skills;
 	}
-    
-    
-    
 
 }
