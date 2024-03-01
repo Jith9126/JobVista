@@ -12,6 +12,7 @@ import org.util.CommonLogger;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -91,13 +92,18 @@ public class LoginServlet extends HttpServlet {
 		try {
 			output = login.checkUser(email, password);
 			
-			if(output.equals("Logged in successfully")) {
-				responseObject.put("statusCode", 200);
+			if(output.equals("Invalid email or password")) {
+				responseObject.put("statusCode", 500);
 				responseObject.put("message", output);
 			}
 			else {
-				responseObject.put("statusCode", 500);
-				responseObject.put("message", output);
+				Cookie[] cookies = login.updateSession(email);
+				
+				for (Cookie cookie : cookies) {
+			        response.addCookie(cookie);
+			    }
+				responseObject.put("statusCode", 200);
+				responseObject.put("message", "Logged in successfully");
 			}
 		
 		}

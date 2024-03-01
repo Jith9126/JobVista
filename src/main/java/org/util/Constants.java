@@ -109,4 +109,10 @@ public class Constants {
 	public static String checkUser = "select * from Users where Email = ? and Password = ?";
 	
 	public static String updateSession = "update Users set Session_Id = ? where Email = ?";
+	
+	public static String OrgId = "select Org_Id from Admin where Email = ?";
+	
+	public static String panelistId = "select Panelist_Id from Panelist where Email = ?";
+	
+	public static String adminId = "select Admin_Id from Admin where Email = ?";
 }
