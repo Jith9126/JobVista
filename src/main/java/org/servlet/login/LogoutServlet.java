@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.util.CommonLogger;
 
 /**
@@ -42,9 +44,10 @@ public class LogoutServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
-
+		JSONObject responseObject = new JSONObject();
 		Cookie[] cookies = request.getCookies();
 	    if (cookies != null) {
+	    	
 	        for (Cookie cookie : cookies) {
 	        	if(cookie.getName().equals("admin_Id")) {
 	        		logger.info("Admin "+cookie.getValue()+" was logged out");
@@ -55,7 +58,18 @@ public class LogoutServlet extends HttpServlet {
 	            cookie.setMaxAge(0);
 	            response.addCookie(cookie);
 	        }
+	        
+	        try {
+				responseObject.put("statusCode", 200);
+				responseObject.put("message", "You have logged out");
+			} 
+	        catch (JSONException e) {
+				logger.error("Error parsing JSON object. "+e.getMessage());
+			}
+	        
 	    }
+	  
+	    response.getWriter().write(responseObject.toString());
 	    
 	}
 
