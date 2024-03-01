@@ -57,7 +57,7 @@ public class AddApplicantServlet extends HttpServlet {
             int departmentId = jsonObject.getInt("departmentId");
             String phoneNo = jsonObject.getString("phone");
             String qualification = jsonObject.getString("qualification");
-            String photo = jsonObject.getString("photo");
+//            String photo = jsonObject.getString("photo");
 
             // Extracting sources (assuming it's an array of JSON objects with "link" and "platform" properties)
             JSONArray sourcesArray = jsonObject.getJSONArray("sources");
@@ -80,7 +80,7 @@ public class AddApplicantServlet extends HttpServlet {
             }
 
             ApplicantDTO applicantDTO = new ApplicantDTO(name, email, dob, gender, experience, departmentId, phoneNo,
-                    qualification, photo, sources, skills);
+                    qualification, sources, skills);
             
             // Assuming you have an ApplicantDAO instance
             ApplicantDAO applicantDAO = new ApplicantDAOImpl();
