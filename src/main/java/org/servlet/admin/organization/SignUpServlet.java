@@ -1,6 +1,5 @@
 package org.servlet.admin.organization;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -48,25 +47,7 @@ e HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 		
-		BufferedReader reader = request.getReader();
-		StringBuilder builder = new StringBuilder();
-		String line;
-		
-		while ((line = reader.readLine()) != null) {
-			builder.append(line);
-		}
-		
-		String jsonData = builder.toString();
-		JSONObject jsonObject = null;
-		
-		try {
-			jsonObject = new JSONObject(jsonData);
-		} 
-		
-		catch (JSONException e) {
-			logger.error("json exception in signup servlet while converting string into json object");
-			e.printStackTrace();
-		}
+		JSONObject jsonObject = (JSONObject) request.getAttribute("object");
 		
 		String orgName = null;
 		String orgType = null;
