@@ -39,8 +39,7 @@ public class LoginFilter implements Filter {
 			jsonObject = new JSONObject(jsonData);
 		} 
 		catch (JSONException e) {
-			logger.error("json exception in login filter while parsing json object");
-			e.printStackTrace();
+			logger.error("json exception in login filter while parsing json object\n"+e.getMessage());
 		}
 		
 		String email = null;
@@ -54,7 +53,7 @@ public class LoginFilter implements Filter {
 		} 
 		
 		catch (JSONException e) {
-			logger.error("User "+email+"\njson exception in login filter while parsing json object");
+			logger.error("User "+email+"\njson exception in login filter while parsing json object\n"+e.getMessage());
 		}
 		
 		String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
@@ -69,7 +68,7 @@ public class LoginFilter implements Filter {
 					responseObject.put("message", "Invalid password or email format");
 				} 
 			    catch (JSONException e) {
-					logger.error("User "+email+"\njson exception in login filter while parsing json object");
+					logger.error("User "+email+"\njson exception in login filter while parsing json object\n"+e.getMessage());
 				}
 			    response.getWriter().write(responseObject.toString());
 			    return;
