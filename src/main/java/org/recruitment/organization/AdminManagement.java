@@ -355,30 +355,47 @@ public class AdminManagement {
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
 	    while(resultSet.next()) {
-	        json.put(resultSet.getString("DepartmentTitle"), resultSet.getInt("Count"));
+	        String departmentTitle = resultSet.getString("DepartmentTitle");
+	        int count = resultSet.getInt("Count");
+	        if (count == 0) {
+	            json.put(departmentTitle, 0);
+	        } else {
+	            json.put(departmentTitle, count);
+	        }
 	    }
+	    
 	    return json;
 	}
+
 	
 	public JSONObject getOpeningsGraphByMonth(int org_id) throws SQLException, JSONException {
 	    ConnectionClass db = ConnectionClass.CreateCon();
 	    Connection connection = db.getConnection();
 	    JSONObject json = new JSONObject();
-	   
+
 	    PreparedStatement preparedStatement = connection.prepareStatement(Constants.getOpeningGraphByMonth);
 	    preparedStatement.setInt(1, org_id);
 	    ResultSet resultSet = preparedStatement.executeQuery();
-	    
-	    while(resultSet.next()) {
+
+	    String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+	    for (String monthName : monthNames) {
+	        json.put(monthName, 0);
+	    }
+
+	    while (resultSet.next()) {
+	        int month = resultSet.getInt("Month");
+	        int count = resultSet.getInt("Count");
+
 	        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
 	        Calendar calendar = Calendar.getInstance();
-	        calendar.set(Calendar.MONTH, resultSet.getInt("Month") - 1);
+	        calendar.set(Calendar.MONTH, month - 1);
 	        String monthName = sdf.format(calendar.getTime());
-	        
-	        json.put(monthName, resultSet.getInt("Count"));
+	        json.put(monthName, count);
 	    }
+
 	    return json;
 	}
+
 
 	public JSONObject getApplicantsStatusGraph(int org_Id) throws SQLException, JSONException {
 		
@@ -390,8 +407,13 @@ public class AdminManagement {
 	    preparedStatement.setInt(1, org_Id);
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
+	    String[] status = {"Selected", "Rejected", "Onhold"};
+	     for (String state : status) {
+	    	 json.put(state, 0);
+		 }
+	    
 	    while(resultSet.next()) {
-	        json.put(resultSet.getString("Status"), resultSet.getInt("count"));
+	       	json.put(resultSet.getString("Status"), resultSet.getInt("Count"));
 	    }
 	    
 	    return json;
@@ -407,7 +429,13 @@ public class AdminManagement {
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
 	    while(resultSet.next()) {
-	        json.put(resultSet.getString("Departments.Title"), resultSet.getInt("count(*)"));
+	        String departmentTitle = resultSet.getString("Departments.Title");
+	        int count = resultSet.getInt("count(*)");
+	        if (count == 0) {
+	            json.put(departmentTitle, 0);
+	        } else {
+	            json.put(departmentTitle, count);
+	        }
 	    }
 	    
 	    return json;
@@ -423,15 +451,23 @@ public class AdminManagement {
 	     preparedStatement.setInt(1, orgId);
 	     ResultSet resultSet = preparedStatement.executeQuery();
 		    
-	     while(resultSet.next()) {
-	    	 SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
-		     Calendar calendar = Calendar.getInstance();
-	         calendar.set(Calendar.MONTH, resultSet.getInt("month") - 1);
-	         String monthName = sdf.format(calendar.getTime());
-		        
-   	         json.put(monthName, resultSet.getInt("count(*)"));
+	    
+		    
+	     String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+	     for (String monthName : monthNames) {
+	    	 json.put(monthName, 0);
 		 }
-		    return json;
+
+	     while (resultSet.next()) {
+	    	 SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
+	    	 Calendar calendar = Calendar.getInstance();
+		     calendar.set(Calendar.MONTH, resultSet.getInt("month") - 1);
+		     String monthName = sdf.format(calendar.getTime());       
+	   	     json.put(monthName, resultSet.getInt("count(*)"));
+		 }
+	     
+	     return json;
+
 	}
 	
 	public JSONObject differenceInYearByOpenings(int orgId) throws SQLException, JSONException {

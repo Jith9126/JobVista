@@ -61,8 +61,7 @@ public class LoginServlet extends HttpServlet {
 		
 		catch (JSONException e) {
 		
-			logger.error("json exception in signup servlet while getting data from json object");
-			e.printStackTrace();
+			logger.error("json exception in signup servlet while getting data from json object \n"+e.getMessage());
 		
 		}
 		
