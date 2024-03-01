@@ -65,8 +65,7 @@ public class SignUpFilter extends HttpFilter implements Filter {
 			jsonObject = new JSONObject(jsonData);
 		} 
 		catch (JSONException e) {
-			logger.error("json exception in signup filter while converting string into json object");
-			e.printStackTrace();
+			logger.error("json exception in signup filter while parsingo json object");
 		}
 		
 		String orgName = null;
@@ -87,7 +86,7 @@ public class SignUpFilter extends HttpFilter implements Filter {
 		} 
 		
 		catch (JSONException e) {
-			logger.error("json exception in signup filter while getting data from json object");
+			logger.error("New Admin "+adminEmail+"\njson exception in signUp filter while parsing json object");
 			e.printStackTrace();
 		}
 		
@@ -102,7 +101,7 @@ public class SignUpFilter extends HttpFilter implements Filter {
 			}
 		} 
 	    catch (Exception e) {
-			logger.error("sql exception in signup filter while checking for organisation or admin");
+			logger.error("New Admin "+adminEmail+"sql exception in signup filter while retrieving data from DB");
 			e.printStackTrace();
 		}
 

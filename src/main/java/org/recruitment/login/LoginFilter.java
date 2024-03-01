@@ -1,0 +1,88 @@
+package org.recruitment.login;
+import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.recruitment.organization.SignUpFilter;
+import org.util.CommonLogger;
+
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+
+@WebFilter("/Login")
+public class LoginFilter implements Filter {
+
+	Logger logger = CommonLogger.getCommon().getLogger(SignUpFilter.class);
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        // Initialization code if needed
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        
+    	HttpServletRequest httpRequest = (HttpServletRequest) request;
+	    HttpServletResponse httpResponse = (HttpServletResponse) response;
+	    System.out.println("checking");
+	    BufferedReader reader = httpRequest.getReader();
+		StringBuilder builder = new StringBuilder();
+		String line;
+		while ((line = reader.readLine()) != null) {
+			builder.append(line);
+		}
+		String jsonData = builder.toString();
+		JSONObject jsonObject = null;
+		try {
+			jsonObject = new JSONObject(jsonData);
+		} 
+		catch (JSONException e) {
+			logger.error("json exception in login filter while parsing json object");
+			e.printStackTrace();
+		}
+		
+		String email = null;
+		String password = null;
+		
+		try {
+			
+			email = jsonObject.getString("email");
+			password = jsonObject.getString("password");
+			
+		} 
+		
+		catch (JSONException e) {
+			logger.error("User "+email+"\njson exception in login filter while parsing json object");
+		}
+		
+		String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+		String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+	    
+			if (!password.matches(passwordRegex) || !email.matches(emailRegex)) {
+			 
+			    JSONObject responseObject = new JSONObject();
+			    try {
+					responseObject.put("statusCode", 500);
+					responseObject.put("message", "Invalid password or email format");
+				} 
+			    catch (JSONException e) {
+					logger.error("User "+email+"\njson exception in login filter while parsing json object");
+				}
+			    response.getWriter().write(responseObject.toString());
+			    return;
+			}
+		
+	    request.setAttribute("object", jsonObject);
+	    chain.doFilter(request, response);
+    }
+
+   
+
+    @Override
+    public void destroy() {
+        // Clean-up code if needed
+    }
+}
