@@ -1,4 +1,4 @@
-package org.recruitment.dao;
+package org.recruitment.login;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

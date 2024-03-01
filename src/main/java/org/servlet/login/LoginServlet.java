@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.recruitment.dao.Login;
+import org.recruitment.login.Login;
 import org.util.CommonLogger;
 
 import jakarta.servlet.ServletException;
