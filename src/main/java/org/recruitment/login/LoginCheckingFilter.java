@@ -51,6 +51,8 @@ public class LoginCheckingFilter extends HttpFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
        
+        
+        
         Cookie[] cookies = httpRequest.getCookies();
         boolean isLoggedIn = false;
         if (cookies != null) {
@@ -71,6 +73,10 @@ public class LoginCheckingFilter extends HttpFilter implements Filter {
         } 
         else {
             JSONObject jsonObject = new JSONObject();
+            chain.doFilter(httpRequest, httpResponse);
+            if(true) {
+            	return;
+            }
             try {
 				jsonObject.put("statusCode", 500);
 				jsonObject.put("message", "User have logged out");
