@@ -247,6 +247,7 @@ public class AdminManagement {
 	}
 	
 	public JSONArray getOpenings(int orgId) throws SQLException, JSONException {
+<<<<<<< HEAD
 //		ConnectionClass db = ConnectionClass.CreateCon();
 //	    Connection connection = db.getConnection();
 	    Connection connection = ConnectionClass.CreateCon().getConnection();
@@ -255,6 +256,15 @@ public class AdminManagement {
 	    preparedStatement.setInt(1, orgId);
 	    ResultSet resultSet = preparedStatement.executeQuery();
 	    System.out.println("done");
+=======
+		ConnectionClass db = ConnectionClass.CreateCon();
+	    Connection connection = db.getConnection();
+	    
+	    PreparedStatement preparedStatement = connection.prepareStatement(Constants.getOpenings);
+	    preparedStatement.setInt(1, orgId);
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+>>>>>>> 14f5cfc (today Commit)
 	    JSONArray jsonResult = new JSONArray();
 	    
 	    while (resultSet.next()) {

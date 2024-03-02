@@ -35,12 +35,16 @@ public class AddDepartment extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		
 	}
 
 	/**
@@ -48,6 +52,10 @@ public class AddDepartment extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    
+		response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		
 	    JSONObject responseData = new JSONObject();
 	    AdminManagement adminManagement = new AdminManagement();
 	    Cookie[] cookies = request.getCookies();
@@ -83,8 +91,13 @@ public class AddDepartment extends HttpServlet {
 	    } 
 	    
 	    catch (JSONException e) {
+<<<<<<< HEAD
 	        
 	    	logger.error("Admin:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
+=======
+	    	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	    	logger.error("User:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
+>>>>>>> 14f5cfc (today Commit)
 	    	try {
 				responseData.put("statusCode", 500);
 				responseData.put("message", "Error parsing JSON object.\n");
@@ -95,13 +108,18 @@ public class AddDepartment extends HttpServlet {
 	        
 	    } 
 	    catch (SQLException e) {
-	      
+	    	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	    	try {
 				responseData.put("statusCode", 500);
 				responseData.put("message", "Error occurred while retrieving data from the database.");
 			} 
 	    	catch (JSONException e1) {
+<<<<<<< HEAD
 	    		logger.error("Admin: "+adminId+"\nError parsing JSON object.\n" + e1.getMessage());
+=======
+	    		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	    		logger.error("User: "+adminId+"\nError parsing JSON object.\n" + e1.getMessage());
+>>>>>>> 14f5cfc (today Commit)
 			}
 	    	logger.error("Admin:"+adminId+"\nError occurred while adding data in the database. \n"+e.getMessage());
 	        
