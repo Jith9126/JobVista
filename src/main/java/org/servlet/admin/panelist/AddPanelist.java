@@ -49,7 +49,7 @@ public class AddPanelist extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+        System.out.println("get");
         JSONObject responseData = new JSONObject();
         AdminManagement adminManagement = new AdminManagement();
         Cookie[] cookies = request.getCookies();
@@ -82,11 +82,12 @@ public class AddPanelist extends HttpServlet {
             String email = jsonObject.getString("email");
             String genderStr = jsonObject.getString("gender");
             Gender  gender = Gender.valueOf(genderStr.toUpperCase());
+            System.out.println(genderStr);
             String position = jsonObject.getString("position");
             String password = jsonObject.getString("password");
-            int departmentId = jsonObject.getInt("departmentId");
+            String department = jsonObject.getString("department");
             responseData.put("statusCode", 200);
-            responseData.put("message",adminManagement.addPanelist(name, email, gender, position, password, departmentId, Integer.parseInt(orgId)));
+            responseData.put("message",adminManagement.addPanelist(name, email, gender, position, password, department, Integer.parseInt(orgId)));
         
         }
         

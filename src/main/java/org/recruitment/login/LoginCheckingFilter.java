@@ -24,7 +24,7 @@ import jakarta.servlet.annotation.WebFilter;
 /**
  * Servlet Filter implementation class LoginCheckingFilter
  */
-@WebFilter("/*")
+//@WebFilter("/*")
 public class LoginCheckingFilter extends HttpFilter implements Filter {
 	
 	Logger logger = CommonLogger.getCommon().getLogger(AdminManagement.class);
