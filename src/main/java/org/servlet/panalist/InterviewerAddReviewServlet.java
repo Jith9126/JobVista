@@ -42,6 +42,7 @@ public class InterviewerAddReviewServlet extends HttpServlet {
 				e1.printStackTrace();
 			}
             try {
+            	System.out.println("message" + "Error adding review: " + e.getMessage());
 				jsonResponse.put("message", "Error adding review: " + e.getMessage());
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block

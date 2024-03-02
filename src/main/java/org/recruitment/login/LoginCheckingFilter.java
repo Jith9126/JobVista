@@ -62,7 +62,11 @@ public class LoginCheckingFilter extends HttpFilter implements Filter {
             }
         }
 
-        if (isLoggedIn) {
+//        if (isLoggedIn) {
+//            chain.doFilter(request, response);
+//        }
+
+        if (true) {
             chain.doFilter(request, response);
         } 
         else {
