@@ -2,13 +2,13 @@ package org.recruitment.dto;
 
 //DepartmentsDTO
 public class DepartmentsDTO {
- public DepartmentsDTO(String string) {
-		// TODO Auto-generated constructor stub
+	public DepartmentsDTO(String title) {
+		this.title = title;
 	}
-private int departmentId;
- private String title;
- private int orgId;
- private String description;
 
- // Constructors, getters, and setters
+	private int departmentId;
+	private String title;
+	private int orgId;
+	private String description;
+
 }

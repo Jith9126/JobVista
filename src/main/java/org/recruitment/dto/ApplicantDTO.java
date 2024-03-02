@@ -13,15 +13,12 @@ public class ApplicantDTO {
     private int departmentId;
     private String phoneNo;
     private String qualification;
-    private String photo;
     private List<SocialMediaDTO> sources;
     private List<SkillDTO> skills;
 
-    // Constructors, getters, and setters
 
     public ApplicantDTO(String name, String email, Date dob, Gender gender, int experience,
-                        int departmentId, String phoneNo, String qualification, String photo,
-                        List<SocialMediaDTO> sources, List<SkillDTO> skills) {
+                        int departmentId, String phoneNo, String qualification, List<SocialMediaDTO> sources, List<SkillDTO> skills) {
         this.name = name;
         this.email = email;
         this.dob = dob;
@@ -30,7 +27,6 @@ public class ApplicantDTO {
         this.departmentId = departmentId;
         this.phoneNo = phoneNo;
         this.qualification = qualification;
-        this.photo = photo;
         this.sources = sources;
         this.skills = skills;
     }
@@ -67,9 +63,9 @@ public class ApplicantDTO {
 		return qualification;
 	}
 
-	public String getPhoto() {
-		return photo;
-	}
+//	public String getPhoto() {
+//		return photo;
+//	}
 
 	public List<SocialMediaDTO> getSources() {
 		return sources;
@@ -111,9 +107,9 @@ public class ApplicantDTO {
 		this.qualification = qualification;
 	}
 
-	public void setPhoto(String photo) {
-		this.photo = photo;
-	}
+//	public void setPhoto(String photo) {
+//		this.photo = photo;
+//	}
 
 	public void setSources(List<SocialMediaDTO> sources) {
 		this.sources = sources;
@@ -122,8 +118,5 @@ public class ApplicantDTO {
 	public void setSkills(List<SkillDTO> skills) {
 		this.skills = skills;
 	}
-    
-    
-    
 
 }

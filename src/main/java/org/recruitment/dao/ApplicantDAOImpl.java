@@ -11,8 +11,8 @@ public class ApplicantDAOImpl implements ApplicantDAO {
     @Override
     public boolean addApplicant(ApplicantDTO applicantDTO) {
         try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
-            String query = "INSERT INTO Applicant (Name, Email, DOB, Gender, Experience, Department_Id, Phone, Qualification, Photo) " +
-                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Job_Seeker (Name, Email, DOB, Gender, Experience, Department_Id, Phone, Qualification) " +
+                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, applicantDTO.getName());
@@ -23,7 +23,7 @@ public class ApplicantDAOImpl implements ApplicantDAO {
                 preparedStatement.setInt(6, applicantDTO.getDepartmentId());
                 preparedStatement.setString(7, applicantDTO.getPhoneNo());
                 preparedStatement.setString(8, applicantDTO.getQualification());
-                preparedStatement.setString(9, applicantDTO.getPhoto());
+//                preparedStatement.setString(9, applicantDTO.getPhoto());
                 
                 int rowsAffected = preparedStatement.executeUpdate();
                 
@@ -31,7 +31,6 @@ public class ApplicantDAOImpl implements ApplicantDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception appropriately
             return false;
         }
     }
@@ -39,7 +38,7 @@ public class ApplicantDAOImpl implements ApplicantDAO {
     @Override
     public boolean removeApplicant(String name, String email) {
         try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
-            String query = "DELETE FROM Applicant WHERE Name LIKE ? AND Email LIKE ?";
+            String query = "DELETE FROM Job_Seeker WHERE Name LIKE ? AND Email LIKE ?";
             
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, "%" + name + "%");
@@ -58,7 +57,7 @@ public class ApplicantDAOImpl implements ApplicantDAO {
     @Override
     public boolean applyForJob(String name, String email, int openingId) {
         try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
-            String query = "SELECT Applicant_Id FROM Applicant WHERE Name LIKE ? AND Email LIKE ?";
+            String query = "SELECT Job_Seeker_Id FROM Job_Seeker WHERE Name LIKE ? AND Email LIKE ?";
             
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, "%" + name + "%");
@@ -68,7 +67,7 @@ public class ApplicantDAOImpl implements ApplicantDAO {
                 
                 while (rs.next()) {
                     int applicantId = rs.getInt("Applicant_Id");
-                    String applyQuery = "INSERT INTO Application (Applicant_Id, Opening_Id, Date) VALUES (?, ?, ?)";
+                    String applyQuery = "INSERT INTO Application (Job_Seeker_Id, Opening_Id, Date) VALUES (?, ?, ?)";
                     
                     try (PreparedStatement applyStatement = connection.prepareStatement(applyQuery)) {
                         applyStatement.setInt(1, applicantId);
@@ -88,6 +87,4 @@ public class ApplicantDAOImpl implements ApplicantDAO {
 		return false;
     }
 
-
-    // Other methods for data access
 }

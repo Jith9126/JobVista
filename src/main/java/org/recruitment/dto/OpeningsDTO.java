@@ -15,7 +15,6 @@ public class OpeningsDTO {
 	private Date startDate;
 	private Date endDate;
 
-	// Constructors
 
 	public OpeningsDTO(long openingId, String description, int experience, String qualification,
 			String departments, String employmentType, String salaryRange, Date startDate,
