@@ -37,9 +37,19 @@ public class AdminDashBoard extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        
+        doPost(request, response);
 	}
 
 	/**
@@ -99,7 +109,7 @@ public class AdminDashBoard extends HttpServlet {
         }
         
         catch (JSONException e) {
-	        
+        	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	    	logger.error("Admin:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
 	    	try {
 				responseData.put("statusCode", 500);
@@ -111,7 +121,7 @@ public class AdminDashBoard extends HttpServlet {
 	    	
 	    } 
 	    catch (SQLException e) {
-	      
+	    	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	    	try {
 				responseData.put("statusCode", 500);
 				responseData.put("message", "Error occurred while retrieving data from the database.");
