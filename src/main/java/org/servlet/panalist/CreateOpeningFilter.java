@@ -3,9 +3,11 @@ package org.servlet.panalist;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.recruitment.users.Panelist;
 import org.recruitment.users.PanelistManager;
+import org.util.CommonLogger;
 import org.util.Gender;
 
 import jakarta.servlet.Filter;
@@ -27,9 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebFilter("/CreateOpeningFilter")
 public class CreateOpeningFilter extends HttpFilter implements Filter {
        
-    private static final long serialVersionUID = 1L;
-
-	/**
+    /**
      * @see HttpFilter#HttpFilter()
      */
     public CreateOpeningFilter() {

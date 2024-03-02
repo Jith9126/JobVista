@@ -4,54 +4,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<display-name>JobVista</display-name>
-<<<<<<< HEAD
-=======
-	
-	<servlet>
-		<description>
-		</description>
-		<display-name>AddSkillToApplicant</display-name>
-		<servlet-name>AddSkillToApplicant</servlet-name>
-		<servlet-class>org.servlet.panalist.AddSkillToApplicant</servlet-class>
-	</servlet>
-	<servlet>
-		<description>
-		</description>
-		<display-name>CreateOpening</display-name>
-		<servlet-name>CreateOpening</servlet-name>
-		<servlet-class>org.servlet.panalist.CreateOpening</servlet-class>
-	</servlet>
-	<servlet>
-		<description>
-		</description>
-		<display-name>AddTestToOpening</display-name>
-		<servlet-name>AddTestToOpening</servlet-name>
-		<servlet-class>org.servlet.panalist.AddTestToOpening</servlet-class>
-	</servlet>
-	<servlet>
-		<description>
-		</description>
-		<display-name>CandidateSelection</display-name>
-		<servlet-name>CandidateSelection</servlet-name>
-		<servlet-class>org.servlet.panalist.CandidateSelection</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>AddSkillToApplicant</servlet-name>
-		<url-pattern>/AddSkillToApplicant</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>CreateOpening</servlet-name>
-		<url-pattern>/CreateOpening</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>AddTestToOpening</servlet-name>
-		<url-pattern>/AddTestToOpening</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>CandidateSelection</servlet-name>
-		<url-pattern>/CandidateSelection</url-pattern>
-	</servlet-mapping>
->>>>>>> 14f5cfc (today Commit)
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>

@@ -62,11 +62,7 @@ public class GetPanelist extends HttpServlet {
         
         try {
         	
-<<<<<<< HEAD
             JSONArray panelistsData = adminManagement.getPanelists(Integer.parseInt(orgId));
-=======
-        	JSONArray panelistsData = adminManagement.getPanelists(Integer.parseInt(orgId));
->>>>>>> 14f5cfc (today Commit)
             responseData.put("statusCode", 200);
             responseData.put("message",panelistsData);
         
