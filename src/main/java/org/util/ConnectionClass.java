@@ -13,7 +13,7 @@ public class ConnectionClass {
 		try {
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/Recruitment","ragavi-zstk352","Karagavi3/"
+                "jdbc:mysql://localhost:3306/JobVista2","sun","sun"
         );
 		}catch (SQLException e) {
 			System.out.println("Problem in sql Connection");
@@ -24,11 +24,14 @@ public class ConnectionClass {
 	}
 	
 	
-	public static ConnectionClass CreateCon(){
-		if(currConnection == null) {
-			currConnection = new ConnectionClass();
+	public static ConnectionClass CreateCon(){			
+
+		if(currConnection instanceof ConnectionClass) {
+			return currConnection;
 		}
-		return currConnection;
+		else {
+			return new ConnectionClass(); 
+		}
 		
 	}
 	

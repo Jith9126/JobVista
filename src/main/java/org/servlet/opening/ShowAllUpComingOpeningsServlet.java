@@ -14,15 +14,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/ShowAllOpeningsServlet")
-public class ShowAllOpeningsServlet extends HttpServlet {
+@WebServlet("/ShowAllUpComingOpeningsServlet")
+public class ShowAllUpComingOpeningsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             OpeningDetailsDAO openingDetailsDAO = new OpeningDetailsDAO();
-            List<JSONObject> openingDetailsList = openingDetailsDAO.getAllOpenings();
+            List<JSONObject> openingDetailsList = openingDetailsDAO.getAllUpComingOpenings();
 
             // Create a JSON object for the response
             JSONObject jsonResponse = new JSONObject();

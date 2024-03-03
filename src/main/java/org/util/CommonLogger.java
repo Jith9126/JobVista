@@ -17,7 +17,7 @@ public class CommonLogger {
 	
 	public <T> Logger getLogger(Class <T>cls) {
 		loger = Logger.getLogger(cls);
-		PropertyConfigurator.configure("/home/ragavi-zstk352/log4.properties");
+		PropertyConfigurator.configure("/home/sun-zstk328/.logs/JobVista.properties");
 		return loger;
 	}
 		
