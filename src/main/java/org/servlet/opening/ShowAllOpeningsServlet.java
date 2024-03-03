@@ -22,7 +22,7 @@ public class ShowAllOpeningsServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             OpeningDetailsDAO openingDetailsDAO = new OpeningDetailsDAO();
-            List<JSONObject> openingDetailsList = openingDetailsDAO.getAllOpenings();
+            List<JSONObject> openingDetailsList = openingDetailsDAO.getAllUpComingOpenings();
 
             // Create a JSON object for the response
             JSONObject jsonResponse = new JSONObject();

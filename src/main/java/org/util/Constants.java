@@ -100,7 +100,7 @@ public class Constants {
 
 		// For applicants
 	
-	public static String getApplicants = "select * from Job_Seeker join Result on Job_Seeker.Job_Seeker_Id = Result.Job_Seeker_id where Result.Status = ? And Result.Opening_Id = ?";
+	public static String getApplicants = "SELECT * FROM Job_Seeker JOIN Result ON Job_Seeker.Job_Seeker_Id = Result.Job_Seeker_id JOIN Test ON Test.Test_Id = Result.Test_Id WHERE Result.Status = ? AND Test.Opening_Id = ?;";
 
 	
 	
