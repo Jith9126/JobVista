@@ -93,16 +93,15 @@ public class Constants {
 	
 	public static String getOpeningGraphByMonth = "select month(Start_Date) as Month, count(*) as Count from Openings join Departments on Openings.Department_Id = Departments.Department_Id where Departments.Org_Id = ? and Openings.Start_Date >= date_sub(curdate(), interval 1 year) group by month(Start_Date)";
 	 
-	public static String getApplicantsStatusGraph = "select Status, count(*) as count from Result join Openings on Openings.Opening_Id = Result.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? group by Status";	  
+	public static String getApplicantsStatusGraph = "select Status, count(*) as count from Result join Test on Test.Test_Id = Result.Test_Id join Openings on Openings.Opening_Id = Test.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? group by Status";	  
 
-	public static String selectedApplicantsGraphInDepartments = "select Departments.Title, count(*) from Result join Openings on Openings.Opening_Id = Result.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' Group by Departments.Title";
+	public static String selectedApplicantsGraphInDepartments = "select Departments.Title, count(*) from Result join Test on Test.Test_Id = Result.Test_Id join Openings on Openings.Opening_Id = Test.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' Group by Departments.Title";
 
-	public static  String selectedApplicantsGraphInMonth = "select month(Openings.Start_Date) as month, count(*) from Result join Openings on Openings.Opening_Id = Result.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' and Openings.Start_Date >= date_sub(curdate(), interval 1 year) Group by month(Openings.Start_Date)";
+	public static  String selectedApplicantsGraphInMonth = "select month(Openings.Start_Date) as month, count(*) from Result join Test on Test.Test_Id = Result.Test_Id join Openings on Openings.Opening_Id = Test.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' and Openings.Start_Date >= date_sub(curdate(), interval 1 year) Group by month(Openings.Start_Date)";
 
 		// For applicants
 	
 	public static String getApplicants = "SELECT * FROM Job_Seeker JOIN Result ON Job_Seeker.Job_Seeker_Id = Result.Job_Seeker_id JOIN Test ON Test.Test_Id = Result.Test_Id WHERE Result.Status = ? AND Test.Opening_Id = ?;";
-
 	
 	
 	// For login
