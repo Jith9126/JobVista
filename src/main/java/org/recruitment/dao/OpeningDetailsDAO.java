@@ -100,7 +100,7 @@ public class OpeningDetailsDAO {
 			preparedStatement.setInt(2, OrgID);
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
 				while (resultSet.next()) {
-					System.out.println("Calling mapResultSetToJSON");
+					System.out.println("Calling mapResultSetToJSON234");
 					JSONObject openingDetailsJSON;
 					try {
 						openingDetailsJSON = mapResultSetToJSONForAdmin(resultSet);
@@ -125,11 +125,29 @@ public class OpeningDetailsDAO {
 	    openingDetailsJSON.put("Organization", getOrganizationDetails(resultSet));
 	    openingDetailsJSON.put("Department", getDepartmentDetails(resultSet));
 	    openingDetailsJSON.put("Template", getTemplateDetailsByOpeningId(resultSet.getLong("Opening_Id")));
-	    openingDetailsJSON.put("Test", getTestDetailsByOpeningId(resultSet.getLong("Opening_Id")));
+	    openingDetailsJSON.put("Tests", getTestsDetailsByOpeningId(resultSet.getLong("Opening_Id")));
 	    openingDetailsJSON.put("Applicants", getApplicantsDetailsByOpeningId(resultSet.getLong("Opening_Id")));
 
 	    return openingDetailsJSON;
 	}
+	private JSONArray getTestsDetailsByOpeningId(long openingId) throws SQLException, JSONException {
+	    String testQuery = "SELECT * FROM Test WHERE Opening_Id = ?;";
+	    JSONArray testsArray = new JSONArray();
+
+	    try (Connection connection = ConnectionClass.CreateCon().getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(testQuery)) {
+	        preparedStatement.setLong(1, openingId);
+
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	            while (resultSet.next()) {
+	                testsArray.put(mapTestResultSetToJSON(resultSet));
+	            }
+	        }
+	    }
+
+	    return testsArray;
+	}
+
 
 
 	private JSONObject getTestDetailsByOpeningId(long openingId) throws SQLException, JSONException {
@@ -161,6 +179,15 @@ public class OpeningDetailsDAO {
 	    }
 	    return templateArray;
 	}
+	private JSONObject mapTemplateResultSetToJSON(ResultSet resultSet) throws SQLException, JSONException {
+		JSONObject templateJSON = new JSONObject();
+
+		templateJSON.put("templateId", resultSet.getLong("Template_Id"));
+		templateJSON.put("templateTypeOfTest", resultSet.getString("TypeOfTest"));
+		templateJSON.put("templateRoundOn", resultSet.getInt("RoundOn"));
+
+		return templateJSON;
+	}
 
 
 	private JSONArray getApplicantsDetailsByOpeningId(long openingId) throws SQLException, JSONException {
@@ -182,38 +209,31 @@ public class OpeningDetailsDAO {
 	}
 
 
-	private List<JSONObject> getTemplateDetailsByOpeningId(int openingId) {
-		List<JSONObject> templateDetailsList = new ArrayList<>();
+//	private List<JSONObject> getTemplateDetailsByOpeningId(int openingId) {
+//		
+//		List<JSONObject> templateDetailsList = new ArrayList<>();
+//
+//		String query = "SELECT Template_Id, TypeOfTest, RoundOn FROM Template WHERE Template_Id IN (SELECT TemplateId FROM Test WHERE Opening_Id = ?)";
+//
+//		try (Connection connection = ConnectionClass.CreateCon().getConnection();
+//				PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+//
+//			preparedStatement.setInt(1, openingId);
+//
+//			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//				while (resultSet.next()) {
+//					JSONObject templateDetails = mapTemplateResultSetToJSON(resultSet);
+//					templateDetailsList.add(templateDetails);
+//				}
+//			}
+//		} catch (SQLException | JSONException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return templateDetailsList;
+//	}
 
-		String query = "SELECT Template_Id, TypeOfTest, RoundOn FROM Template WHERE Template_Id IN (SELECT TemplateId FROM Test WHERE Opening_Id = ?)";
 
-		try (Connection connection = ConnectionClass.CreateCon().getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-			preparedStatement.setInt(1, openingId);
-
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				while (resultSet.next()) {
-					JSONObject templateDetails = mapTemplateResultSetToJSON(resultSet);
-					templateDetailsList.add(templateDetails);
-				}
-			}
-		} catch (SQLException | JSONException e) {
-			e.printStackTrace();
-		}
-
-		return templateDetailsList;
-	}
-
-	private JSONObject mapTemplateResultSetToJSON(ResultSet resultSet) throws SQLException, JSONException {
-		JSONObject templateJSON = new JSONObject();
-
-		templateJSON.put("templateId", resultSet.getLong("Template_Id"));
-		templateJSON.put("templateTypeOfTest", resultSet.getString("TypeOfTest"));
-		templateJSON.put("templateRoundOn", resultSet.getInt("RoundOn"));
-
-		return templateJSON;
-	}
 
 	public JSONObject getTestDetailsByOpeningId(int openingId) {
 		String testQuery = "SELECT * FROM Test WHERE Opening_Id = ?";
@@ -237,15 +257,17 @@ public class OpeningDetailsDAO {
 	}
 
 	private JSONObject mapTestResultSetToJSON(ResultSet resultSet) throws SQLException, JSONException {
-		JSONObject testJSON = new JSONObject();
+	    JSONObject testJSON = new JSONObject();
 
-		testJSON.put("testId", resultSet.getLong("Test_Id"));
-		testJSON.put("testDate", resultSet.getDate("Date"));
-		testJSON.put("testTitle", resultSet.getString("Title"));
-		testJSON.put("testDuration", resultSet.getInt("Duration"));
+	    testJSON.put("testId", resultSet.getLong("Test_Id"));
+	    testJSON.put("testDate", resultSet.getDate("Date"));
+	    testJSON.put("testTitle", resultSet.getString("Title"));
+	    testJSON.put("testDuration", resultSet.getInt("Duration"));
+	    testJSON.put("TemplateId", resultSet.getInt("TemplateId"));
 
-		return testJSON;
+	    return testJSON;
 	}
+
 	public JSONArray getApplicantsDetailsByOpeningId(int openingId) {
 	    String applicantsQuery = "SELECT a.Application_Id, js.Name AS Job_Seeker_Name, js.Email AS Job_Seeker_Email, \n"
 	    		+ "       js.DOB AS Job_Seeker_DOB, js.Gender AS Job_Seeker_Gender, js.Experience AS Job_Seeker_Experience, \n"
@@ -404,7 +426,7 @@ public class OpeningDetailsDAO {
 			testJSON.put("testTitle", resultSet.getString("Test_Title"));
 			testJSON.put("testDuration", resultSet.getInt("Test_Duration"));
 		} else {
-			testJSON.put("testId", JSONObject.NULL);
+			testJSON.put("tesmapTestResultSetToJSONtId", JSONObject.NULL);
 			testJSON.put("testDate", JSONObject.NULL);
 			testJSON.put("testTitle", JSONObject.NULL);
 			testJSON.put("testDuration", JSONObject.NULL);
