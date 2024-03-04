@@ -24,11 +24,19 @@ public class AdminManagement {
 
 	
 	//This method will add the panelist
-	public String addPanelist(String name, String email, Gender gender, String position, String password, int departmentId, int orgId) throws SQLException {
+	public String addPanelist(String name, String email, Gender gender, String position, String password, String department, int orgId) throws SQLException {
 		
 		ConnectionClass db = ConnectionClass.CreateCon();
 		Connection connection = db.getConnection();
 		
+		PreparedStatement getDepartment= connection.prepareStatement(Constants.getDepartment);
+		getDepartment.setString(1, department);
+		ResultSet departments = getDepartment.executeQuery();
+		int departmentId = 0;
+		while(departments.next()) {
+			departmentId = departments.getInt("Department_Id");
+		}
+ 		
 		PreparedStatement checkPreparedStatement = connection.prepareStatement(Constants.isPanelistExists);
 		checkPreparedStatement.setString(1, email);
 		checkPreparedStatement.setInt(2, orgId);
@@ -50,7 +58,7 @@ public class AdminManagement {
 		
 		if(affectedRows > 0) {
 			preparedStatement = connection.prepareStatement(Constants.addUser);
-			preparedStatement.setString(1, "Admin");
+			preparedStatement.setString(1, "Panelist");
 			preparedStatement.setString(2, password);
 			preparedStatement.setString(3, email);
 			int addUser = preparedStatement.executeUpdate();

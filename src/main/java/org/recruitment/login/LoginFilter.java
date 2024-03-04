@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 @WebFilter("/Login")
 public class LoginFilter implements Filter {
@@ -26,14 +27,23 @@ public class LoginFilter implements Filter {
         
     	HttpServletRequest httpRequest = (HttpServletRequest) request;
 	    HttpServletResponse httpResponse = (HttpServletResponse) response;
-	    System.out.println("checking");
-	    BufferedReader reader = httpRequest.getReader();
-		StringBuilder builder = new StringBuilder();
-		String line;
-		while ((line = reader.readLine()) != null) {
-			builder.append(line);
-		}
-		String jsonData = builder.toString();
+	  
+	    if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+            httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+            httpResponse.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+            httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
+            httpResponse.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+	    StringBuilder sb = new StringBuilder();
+        BufferedReader reader = httpRequest.getReader();
+        String line;
+        while ((line = reader.readLine()) != null) {
+        	System.out.println("get");
+        	sb.append(line);
+        }
+        
+		String jsonData = sb.toString();
 		JSONObject jsonObject = null;
 		try {
 			jsonObject = new JSONObject(jsonData);
@@ -61,15 +71,17 @@ public class LoginFilter implements Filter {
 
 	    
 			if (!password.matches(passwordRegex) || !email.matches(emailRegex)) {
-			 
+				
 			    JSONObject responseObject = new JSONObject();
 			    try {
 					responseObject.put("statusCode", 500);
 					responseObject.put("message", "Invalid password or email format");
 				} 
 			    catch (JSONException e) {
+			    	e.printStackTrace();
 					logger.error("User "+email+"\njson exception in login filter while parsing json object\n"+e.getMessage());
 				}
+			  
 			    response.getWriter().write(responseObject.toString());
 			    return;
 			}

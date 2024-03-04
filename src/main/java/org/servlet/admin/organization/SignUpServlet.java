@@ -1,5 +1,6 @@
 package org.servlet.admin.organization;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -18,7 +19,7 @@ import org.util.CommonLogger;
 /**
  * Servlet implementation class SignUpServlet
  */
-@WebServlet("/SignUpServlet")
+@WebServlet("/SignUp")
 public class SignUpServlet extends HttpServlet {
 	Logger logger = CommonLogger.getCommon().getLogger(SignUpServlet.class);
 	private static final long serialVersionUID = 1L;
@@ -29,6 +30,12 @@ public class SignUpServlet extends HttpServlet {
     public SignUpServlet() {
         super();
         // TODO Auto-generated constructor stub
+    }
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
 	/**
@@ -46,9 +53,19 @@ e HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
+		response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		//JSONObject jsonObject = (JSONObject) request.getAttribute("object");
 		
-		JSONObject jsonObject = (JSONObject) request.getAttribute("object");
-		
+		StringBuffer jb = new StringBuffer();
+		String line = null;
+		BufferedReader reader = request.getReader();
+		while ((line = reader.readLine()) != null) {
+		    jb.append(line);
+		}
+
+		String jsonData = jb.toString(); 
 		String orgName = null;
 		String orgType = null;
 		String industry = null;
@@ -57,22 +74,19 @@ e HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 		String adminName = null;
 		String adminEmail = null;
 		String adminPassword = null;
-		JSONObject organization = null;
-		JSONObject admin = null;
-		
 		try {
-			
-			organization = jsonObject.getJSONObject("organization");
-			admin = jsonObject.getJSONObject("admin");
-			
-			orgName = organization.getString("orgName");
-			orgType = organization.getString("orgType");
-			industry = organization.getString("industry");
-			contactEmail = organization.getString("contactEmail");
-			contactNumber = organization.getString("contactNumber");
-			adminName = admin.getString("adminName");
-			adminEmail = admin.getString("adminEmail");
-			adminPassword = admin.getString("adminPassword");
+			System.out.println(jsonData);
+			JSONObject jsonObject = new JSONObject(jsonData);
+			orgName = jsonObject.getJSONObject("organization").getString("orgName");
+			orgType = jsonObject.getJSONObject("organization").getString("orgType");
+			industry = jsonObject.getJSONObject("organization").getString("industry");
+			contactEmail = jsonObject.getJSONObject("organization").getString("contactEmail");
+			contactNumber = jsonObject.getJSONObject("organization").getString("contactNumber");
+
+			adminName = jsonObject.getJSONObject("admin").getString("adminName");
+			adminEmail = jsonObject.getJSONObject("admin").getString("adminEmail");
+			adminPassword = jsonObject.getJSONObject("admin").getString("adminPassword");
+
 		
 		} 
 		
@@ -114,7 +128,7 @@ e HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	        
 	    } 
 	    catch (SQLException e) {
-	      
+	      e.printStackTrace();
 	    	try {
 	    		responseObject.put("statusCode", 500);
 	    		responseObject.put("message", "Error occurred while retrieving data from the database.");

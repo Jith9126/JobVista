@@ -48,9 +48,9 @@ public class Constants {
 	
 		// For sign up
 	
-	public static String addAdmin = "insert into Admin (Name, Email, Org_Id, Password) values (?, ?, ?, ?)";
+	public static String addAdmin = "insert into Admin (Name, Email, Org_Id) values (?, ?, ?)";
 	                                                                                           
-	public static String addOrganization = "insert into Organization (Name, TypeOfOrg, Industry, ContactEmail, ContactNumber) values (?, ?, ?, ?, ?";
+	public static String addOrganization = "insert into Organization (Name, TypeOfOrg, Industry, ContactEmail, ContactNumber) values (?, ?, ?, ?, ?)";
 	public static String getOrgId = "select Org_Id from Organization where Name = ?";
 	
 		// For panelist management
@@ -58,6 +58,7 @@ public class Constants {
 	public static String isPanelistExists = "select * from Panelist where Email = ? and Org_Id = ?";
 	public static String addPanelist = "insert into Panelist (Name, Email, Gender, Department_Id, Org_Id, Position) values (?, ?, ?, ?, ?, ?)";
 	public static String addUser = "insert into Users (Role, Password, Email) values (?, ?, ?)";
+	public static String getDepartment = "select Department_Id from Departments where Title = ?";
 	
 	public static String removePanelist = "delete from Panelist where Panelist_Id = ?";
 	
@@ -97,13 +98,10 @@ public class Constants {
 	public static String selectedApplicantsGraphInDepartments = "select Departments.Title, count(*) from Result join Test on Test.Test_Id = Result.Test_Id join Openings on Openings.Opening_Id = Test.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' Group by Departments.Title";
 
 	public static  String selectedApplicantsGraphInMonth = "select month(Openings.Start_Date) as month, count(*) from Result join Test on Test.Test_Id = Result.Test_Id join Openings on Openings.Opening_Id = Test.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' and Openings.Start_Date >= date_sub(curdate(), interval 1 year) Group by month(Openings.Start_Date)";
-		// For applicants
-	
-	public static String getApplicants = "SELECT * FROM Job_Seeker JOIN Result ON Job_Seeker.Job_Seeker_Id = Result.Job_Seeker_id JOIN Test ON Test.Test_Id = Result.Test_Id WHERE Result.Status = ? AND Test.Opening_Id = ?";
 
-	
-	
-	// For login
+
+	public static String getApplicants = "SELECT * FROM Job_Seeker JOIN Result ON Job_Seeker.Job_Seeker_Id = Result.Job_Seeker_id JOIN Test ON Test.Test_Id = Result.Test_Id WHERE Result.Status = ? AND Test.Opening_Id = ?;";
+
 	
 	public static String checkUser = "select * from Users where Email = ? and Password = ?";
 	

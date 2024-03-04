@@ -36,6 +36,13 @@ public class AddPanelist extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -49,7 +56,11 @@ public class AddPanelist extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+		response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		
+		System.out.println("get");
         JSONObject responseData = new JSONObject();
         AdminManagement adminManagement = new AdminManagement();
         Cookie[] cookies = request.getCookies();
@@ -81,12 +92,13 @@ public class AddPanelist extends HttpServlet {
             String name = jsonObject.getString("name");
             String email = jsonObject.getString("email");
             String genderStr = jsonObject.getString("gender");
+            System.out.println(genderStr);
             Gender  gender = Gender.valueOf(genderStr.toUpperCase());
             String position = jsonObject.getString("position");
             String password = jsonObject.getString("password");
-            int departmentId = jsonObject.getInt("departmentId");
+            String department = jsonObject.getString("department");
             responseData.put("statusCode", 200);
-            responseData.put("message",adminManagement.addPanelist(name, email, gender, position, password, departmentId, Integer.parseInt(orgId)));
+            responseData.put("message",adminManagement.addPanelist(name, email, gender, position, password, department, Integer.parseInt(orgId)));
         
         }
         

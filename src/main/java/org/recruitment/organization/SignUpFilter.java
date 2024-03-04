@@ -27,7 +27,7 @@ import org.util.ConnectionClass;
 /**
  * Servlet Filter implementation class SignUpFilter
  */
-@WebFilter("/SignUpServlet")
+//@WebFilter("/SignUp")
 public class SignUpFilter extends HttpFilter implements Filter {
        
     /**
@@ -52,7 +52,16 @@ public class SignUpFilter extends HttpFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 	    HttpServletRequest httpRequest = (HttpServletRequest) request;
 	    HttpServletResponse httpResponse = (HttpServletResponse) response;
-	    System.out.println("checking");
+	
+	    
+	    if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+            httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+            httpResponse.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+            httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
+            httpResponse.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+	    
 	    BufferedReader reader = httpRequest.getReader();
 		StringBuilder builder = new StringBuilder();
 		String line;

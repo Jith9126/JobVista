@@ -20,7 +20,6 @@ public class SignUp {
 		preparedStatement.setString(1, name);
 		preparedStatement.setString(2, email);
 		preparedStatement.setInt(3, orgId);
-		preparedStatement.setString(4, password);
 		int affectedRows = preparedStatement.executeUpdate();
 		if (affectedRows <=0 ) {
 			preparedStatement = connection.prepareStatement(Constants.addUser);
