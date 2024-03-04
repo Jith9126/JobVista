@@ -93,6 +93,12 @@ public class LoginServlet extends HttpServlet {
 				
 				for (Cookie cookie : cookies) {
 			        response.addCookie(cookie);
+			        if(cookie.getName().equalsIgnoreCase("admin_Id")) {
+			        	responseObject.put("role", "admin");
+			        }
+			        else {
+			        	responseObject.put("role", "panelist");
+			        }
 			    }
 				responseObject.put("statusCode", 200);
 				responseObject.put("message", "Logged in successfully");
