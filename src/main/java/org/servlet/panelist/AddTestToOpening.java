@@ -1,11 +1,15 @@
-package org.servlet.panalist;
+package org.servlet.panelist;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.recruitment.tests.Test;
+import org.recruitment.tests.TestManager;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,16 +18,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class CandidateSelection
+ * Servlet implementation class AddTestToOpening
  */
-@WebServlet("/CandidateSelection")
-public class CandidateSelection extends HttpServlet {
+@WebServlet("/AddTestToOpening")
+public class AddTestToOpening extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor. 
      */
-    public CandidateSelection() {
+    public AddTestToOpening() {
         // TODO Auto-generated constructor stub
     }
 
@@ -32,7 +36,7 @@ public class CandidateSelection extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -41,8 +45,6 @@ public class CandidateSelection extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 //		doGet(request, response);
-		
-		
 		Logger logger = Logger.getLogger(CreateOpening.class);
 		PropertyConfigurator.configure("/home/ajith-zstk355/.logs/jobvista.properties");
 		JSONObject responseJson = new JSONObject();
@@ -54,21 +56,42 @@ public class CandidateSelection extends HttpServlet {
             for (String line = br.readLine(); line != null; line = br.readLine()) {
                 jsonLoad.append(line);
             }
+            
+//            JSONObject jsonData = new JSONObject(request.getParameter("JSON"));
             JSONObject jsonData = new JSONObject(jsonLoad.toString());
             logger.info("JSON payload successfully parsed.");
-            JSONObject panelistJson  = jsonData.getJSONObject("panalist");
-            JSONObject testJson = jsonData.getJSONObject("test");
-            String SelectOrOnhold = jsonData.getString("SelectOrOnhold");
-//            json
+            JSONObject testJson  = jsonData.getJSONObject("test");
+            
+			Test newTest = new Test(testJson.getString("title"), new Date(testJson.getLong("date")), testJson.getInt("duration"), testJson.getString("typeOfTest"));
+			int openingId = testJson.getInt("openingId");
+			TestManager.getTestManager().addTest(openingId, newTest);
+			
+			responseJson.put("status", 200);
+			responseJson.put("code", "success");
+			
+			
+			response.getWriter().write(responseJson.toString());
+			
+			
             
             
             
             
-            
-            
-        }catch (Exception e) {
-        	
         }
+        catch(Exception e) {
+        	
+        	try {
+        	responseJson.put("status", 500);
+        	responseJson.put("error", e.getMessage());
+        	response.getWriter().write(responseJson.toString());
+        	}
+        	catch (JSONException e1) {
+        		
+        	}
+        }
+		
+		
+		
 		
 	}
 

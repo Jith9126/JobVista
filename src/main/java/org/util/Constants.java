@@ -85,7 +85,7 @@ public class Constants {
 	
 	public static String getOpeningsWithDepartment = "select Openings.*, Panelist.* from Openings join Panelist on Panelist.Panelist_Id = Openings.Panelist_Id where Panelist.Department_Id = ?";
 
-	public static  String getCurrentOpenings = "select Openings.*, Panelist.Name from Openings join Panelist on Panelist.Panelist_Id = Openings.Panelist_Id join Departments on Departments.Department_Id = Panelist.Department_Id where Departments.Org_Id = ? and ? between Start_Date AND End_Date";
+	public static  String getCurrentOpenings = "SELECT Openings.*, Panelist.Name FROM Openings JOIN Panelist ON Panelist.Panelist_Id = Openings.Panelist_Id JOIN Departments ON Departments.Department_Id = Panelist.Department_Id WHERE Departments.Org_Id = ? AND Openings.Start_Date >= ?;";
 
 		// For graph
 	
@@ -104,11 +104,9 @@ public class Constants {
 	public static String differenceInYearByOpenings = "select year(Openings.Start_Date) as year, count(*) as count from Openings join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and year(Openings.Start_Date) in (year(current_date()), year(current_date()) - 1) group by year(Start_Date)";
 
 		// For applicants
-	
+
 	public static String getApplicants = "SELECT * FROM Job_Seeker JOIN Result ON Job_Seeker.Job_Seeker_Id = Result.Job_Seeker_id JOIN Test ON Test.Test_Id = Result.Test_Id WHERE Result.Status = ? AND Test.Opening_Id = ?;";
-	
-	
-	// For login
+
 	
 	public static String checkUser = "select * from Users where Email = ? and Password = ?";
 	

@@ -1,4 +1,4 @@
-package org.servlet.panalist;
+package org.servlet.panelist;
 
 import java.awt.Panel;
 import java.io.BufferedReader;

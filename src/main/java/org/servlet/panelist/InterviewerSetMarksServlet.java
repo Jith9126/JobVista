@@ -1,4 +1,4 @@
-package org.servlet.panalist;
+package org.servlet.panelist;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package org.servlet.panalist;
+package org.servlet.panelist;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;

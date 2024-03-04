@@ -78,6 +78,7 @@ public class GetOpenings extends HttpServlet {
 			jsonResponse.put("Value", new JSONArray(openingDetailsList));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			e.printStackTrace();
 		}
         
