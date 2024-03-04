@@ -483,8 +483,7 @@ public class AdminManagement {
 		ConnectionClass db = ConnectionClass.CreateCon();
 		Connection connection = db.getConnection();
 		
-		String query = "select year(Openings.Start_Date) as year, count(*) as count from Openings join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and year(Openings.Start_Date) in (year(current_date()), year(current_date()) - 1) group by year(Start_Date)";
-		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		PreparedStatement preparedStatement = connection.prepareStatement(Constants.differenceInYearByOpenings);
 		preparedStatement.setInt(1, orgId);
 		ResultSet resultSet = preparedStatement.executeQuery();
 		
@@ -519,8 +518,7 @@ public class AdminManagement {
 		ConnectionClass db = ConnectionClass.CreateCon();
 		Connection connection = db.getConnection();
 		
-		String query = "select month(Openings.Start_Date) as month, count(*) as count from Result join Openings on Openings.Opening_Id = Result.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' and month(Openings.Start_Date) in (month(current_date()), month(current_date()) - 1) group by month(Openings.Start_Date)";
-		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		PreparedStatement preparedStatement = connection.prepareStatement(Constants.differenceInMonthByHired);
 		preparedStatement.setInt(1, orgId);
 		ResultSet resultSet = preparedStatement.executeQuery();
 		
