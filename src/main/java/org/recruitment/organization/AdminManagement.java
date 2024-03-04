@@ -336,14 +336,14 @@ public class AdminManagement {
 	    	int id = resultSet.getInt("Opening_Id");
 	    	JSONObject details = new JSONObject();
 	        details.put("id",id);
-	        details.put("Panelist_Id",resultSet.getInt("Panelist.Panelist_Id"));
+	        details.put("Panelist_Id",resultSet.getInt("Panelist_Id"));
 	        details.put("Description",resultSet.getString("Description"));
 	        details.put("Experience",resultSet.getInt("Experience"));
 	        details.put("Qualification",resultSet.getString("Qualification"));
 	        details.put("Departments",resultSet.getString("Departments"));
 	        details.put("EmploymentType",resultSet.getString("EmploymentType"));
 	        details.put("SalaryRange",resultSet.getString("SalaryRange"));
-	        details.put("Name",resultSet.getString("Panelist.Name"));
+	        details.put("Name",resultSet.getString("Name"));
 	        details.put("Start_Date",resultSet.getString("Start_Date"));
 	        details.put("End_Date",resultSet.getString("End_Date"));
 	        
@@ -483,8 +483,7 @@ public class AdminManagement {
 		ConnectionClass db = ConnectionClass.CreateCon();
 		Connection connection = db.getConnection();
 		
-		String query = "select year(Openings.Start_Date) as year, count(*) as count from Openings join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and year(Openings.Start_Date) in (year(current_date()), year(current_date()) - 1) group by year(Start_Date)";
-		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		PreparedStatement preparedStatement = connection.prepareStatement(Constants.differenceInYearByOpenings);
 		preparedStatement.setInt(1, orgId);
 		ResultSet resultSet = preparedStatement.executeQuery();
 		
@@ -519,8 +518,7 @@ public class AdminManagement {
 		ConnectionClass db = ConnectionClass.CreateCon();
 		Connection connection = db.getConnection();
 		
-		String query = "select month(Openings.Start_Date) as month, count(*) as count from Result join Openings on Openings.Opening_Id = Result.Opening_Id join Departments on Departments.Department_Id = Openings.Department_Id where Departments.Org_Id = ? and Result.Status = 'Selected' and month(Openings.Start_Date) in (month(current_date()), month(current_date()) - 1) group by month(Openings.Start_Date)";
-		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		PreparedStatement preparedStatement = connection.prepareStatement(Constants.differenceInMonthByHired);
 		preparedStatement.setInt(1, orgId);
 		ResultSet resultSet = preparedStatement.executeQuery();
 		
