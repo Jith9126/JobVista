@@ -34,19 +34,20 @@ public class AddApplicantServlet extends HttpServlet {
             throws ServletException, IOException {
 //        Logger logger = new CommonLogger(AddApplicantServlet.class).getLogger();
 
+    	System.out.println("Entered");
         BufferedReader reader = request.getReader();
         StringBuilder jsonStringBuilder = new StringBuilder();
         String line;
-
+        System.out.println("started");
         while ((line = reader.readLine()) != null) {
             jsonStringBuilder.append(line);
         }
-
+        System.out.println("while ended");
         String json = jsonStringBuilder.toString();
 
         try {
             JSONObject jsonObject = new JSONObject(json);
-            
+            System.out.println("starting to get data");
             // Extracting values from JSON
             String name = jsonObject.getString("name");
             String email = jsonObject.getString("email");
@@ -58,7 +59,7 @@ public class AddApplicantServlet extends HttpServlet {
             String phoneNo = jsonObject.getString("phone");
             String qualification = jsonObject.getString("qualification");
 //            String photo = jsonObject.getString("photo");
-
+            System.out.println("center of get data = > 1");
             // Extracting sources (assuming it's an array of JSON objects with "link" and "platform" properties)
             JSONArray sourcesArray = jsonObject.getJSONArray("sources");
             List<SocialMediaDTO> sources = new ArrayList<>();
@@ -68,7 +69,7 @@ public class AddApplicantServlet extends HttpServlet {
                 String platform = sourceObject.getString("platform");
                 sources.add(new SocialMediaDTO(link, platform));
             }
-
+            System.out.println("center of get data = > 2");
             // Extracting skills (assuming it's an array of JSON objects with "skill" and "description" properties)
             JSONArray skillsArray = jsonObject.getJSONArray("skills");
             List<SkillDTO> skills = new ArrayList<>();
@@ -78,26 +79,58 @@ public class AddApplicantServlet extends HttpServlet {
                 String description = skillObject.getString("description");
                 skills.add(new SkillDTO(skill, description));
             }
-
+            System.out.println("done to get data");
             ApplicantDTO applicantDTO = new ApplicantDTO(name, email, dob, gender, experience, departmentId, phoneNo,
                     qualification, sources, skills);
-            
+            System.out.println("creating object of Applicant");
             // Assuming you have an ApplicantDAO instance
             ApplicantDAO applicantDAO = new ApplicantDAOImpl();
             boolean success = applicantDAO.addApplicant(applicantDTO);
-
+            System.out.println("creating Applicant");
             JSONObject responseJson = new JSONObject();
-
+            System.out.println(success);
+            int openingId = jsonObject.getInt("openingId");
             if (success) {
+            	boolean successforapply = applicantDAO.applyForJob(name, email, openingId);
+            	
+            	
+//                JSONObject responseJson = new JSONObject();
+                System.out.println(successforapply);
+                if (successforapply) {
+                    responseJson.put("status", "success");
+                    responseJson.put("message", "Job application successful.");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                    responseJson.put("status", "error");
+                    responseJson.put("message", "Failed to apply for the job.");
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
+
+                response.getWriter().write(responseJson.toString());
+                
                 // Forward the request to ApplyForJobServlet after successfully adding the applicant
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/ApplyForJobServlet");
-                dispatcher.forward(request, response);
+//            	System.out.println("dispatcher");
+//                RequestDispatcher dispatcher = request.getRequestDispatcher("/ApplyForJobServlet");
+//                System.out.println("dispatcher end");
+//                dispatcher.forward(request, response);
+//                System.out.println("dispatching");
             } else {
                 responseJson.put("status", "error");
                 responseJson.put("message", "Failed to add applicant.");
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 response.getWriter().write(responseJson.toString());
             }
+         // After successfully adding the applicant
+//            if (success) {
+//                String applyForJobURL = request.getContextPath() + "/ApplyForJobServlet";
+//                response.sendRedirect(applyForJobURL);
+//            } else {
+//                responseJson.put("status", "error");
+//                responseJson.put("message", "Failed to add applicant.");
+//                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//                response.getWriter().write(responseJson.toString());
+//            }
+
         } catch (JSONException e) {
             JSONObject responseJson = new JSONObject();
             try {

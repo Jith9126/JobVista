@@ -23,31 +23,33 @@ public class ApplyForJobServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	System.out.println("ApplyForJobServlet");
 
         BufferedReader reader = request.getReader();
         StringBuilder jsonStringBuilder = new StringBuilder();
         String line;
-
+        System.out.println("starting");
         while ((line = reader.readLine()) != null) {
             jsonStringBuilder.append(line);
         }
+        System.out.println("while ended");
 
         String json = jsonStringBuilder.toString();
-
+        System.out.println("jsonStringBuilder");
         try {
             JSONObject jsonObject = new JSONObject(json);
-            
+            System.out.println("Extracting values from JSON");
             // Extracting values from JSON
             String name = jsonObject.getString("name");
             String email = jsonObject.getString("email");
             int openingId = jsonObject.getInt("openingId");
 
-            // Assuming you have an ApplicantDAO instance
             ApplicantDAO applicantDAO = new ApplicantDAOImpl();
+            System.out.println("applying for job");
             boolean success = applicantDAO.applyForJob(name, email, openingId);
-
+            System.out.println("applied for job");
             JSONObject responseJson = new JSONObject();
-
+            System.out.println(success);
             if (success) {
                 responseJson.put("status", "success");
                 responseJson.put("message", "Job application successful.");
@@ -60,8 +62,10 @@ public class ApplyForJobServlet extends HttpServlet {
 
             response.getWriter().write(responseJson.toString());
         } catch (JSONException e) {
+        	System.out.println("cathcing the error");
             JSONObject responseJson = new JSONObject();
             try {
+            	System.out.println("this is where the error is ");
 				responseJson.put("status", "error");
 				responseJson.put("message", "Error parsing JSON: " + e.getMessage());
 			} catch (JSONException e1) {
