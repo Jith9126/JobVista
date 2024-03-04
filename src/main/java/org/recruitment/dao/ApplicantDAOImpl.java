@@ -66,7 +66,7 @@ public class ApplicantDAOImpl implements ApplicantDAO {
                 ResultSet rs = preparedStatement.executeQuery();
                 
                 while (rs.next()) {
-                    int applicantId = rs.getInt("Applicant_Id");
+                    int applicantId = rs.getInt("Job_Seeker_Id");
                     String applyQuery = "INSERT INTO Application (Job_Seeker_Id, Opening_Id, Date) VALUES (?, ?, ?)";
                     
                     try (PreparedStatement applyStatement = connection.prepareStatement(applyQuery)) {

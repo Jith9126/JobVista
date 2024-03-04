@@ -209,31 +209,6 @@ public class OpeningDetailsDAO {
 	}
 
 
-//	private List<JSONObject> getTemplateDetailsByOpeningId(int openingId) {
-//		
-//		List<JSONObject> templateDetailsList = new ArrayList<>();
-//
-//		String query = "SELECT Template_Id, TypeOfTest, RoundOn FROM Template WHERE Template_Id IN (SELECT TemplateId FROM Test WHERE Opening_Id = ?)";
-//
-//		try (Connection connection = ConnectionClass.CreateCon().getConnection();
-//				PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-//
-//			preparedStatement.setInt(1, openingId);
-//
-//			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-//				while (resultSet.next()) {
-//					JSONObject templateDetails = mapTemplateResultSetToJSON(resultSet);
-//					templateDetailsList.add(templateDetails);
-//				}
-//			}
-//		} catch (SQLException | JSONException e) {
-//			e.printStackTrace();
-//		}
-//
-//		return templateDetailsList;
-//	}
-
-
 
 	public JSONObject getTestDetailsByOpeningId(int openingId) {
 		String testQuery = "SELECT * FROM Test WHERE Opening_Id = ?";
