@@ -48,9 +48,9 @@ public class Constants {
 	
 		// For sign up
 	
-	public static String addAdmin = "insert into Admin (Name, Email, Org_Id) values (?, ?, ?, ?)";
+	public static String addAdmin = "insert into Admin (Name, Email, Org_Id) values (?, ?, ?)";
 	                                                                                           
-	public static String addOrganization = "insert into Organization (Name, TypeOfOrg, Industry, ContactEmail, ContactNumber) values (?, ?, ?, ?, ?";
+	public static String addOrganization = "insert into Organization (Name, TypeOfOrg, Industry, ContactEmail, ContactNumber) values (?, ?, ?, ?, ?)";
 	public static String getOrgId = "select Org_Id from Organization where Name = ?";
 	
 		// For panelist management

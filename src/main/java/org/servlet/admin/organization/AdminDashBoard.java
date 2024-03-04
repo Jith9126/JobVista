@@ -27,7 +27,10 @@ public class AdminDashBoard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
-     * @see HttpServlet#HttpServlet()
+     * @see HttpServlet#HttpS // obj:  {
+        //     admin: {},
+        //     organization: {}
+        // }ervlet()
      */
     public AdminDashBoard() {
         super();
@@ -68,6 +71,7 @@ public class AdminDashBoard extends HttpServlet {
         	for(Cookie cookie:cookies) {
         		if(cookie.getName().equalsIgnoreCase("org_Id")) {
         			orgId = cookie.getValue();
+        			System.out.println(orgId);
             	}
         		if(cookie.getName().equalsIgnoreCase("admin_Id")) {
         			adminId = cookie.getValue();
