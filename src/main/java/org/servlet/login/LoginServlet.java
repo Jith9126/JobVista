@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 		response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET");
+        response.setHeader("Access-Control-Allow-Methods", "POST");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 		
 		JSONObject jsonObject = (JSONObject) request.getAttribute("object");

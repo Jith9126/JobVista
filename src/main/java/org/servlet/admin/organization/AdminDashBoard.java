@@ -113,6 +113,7 @@ public class AdminDashBoard extends HttpServlet {
         }
         
         catch (JSONException e) {
+        	
         	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	    	logger.error("Admin:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
 	    	try {

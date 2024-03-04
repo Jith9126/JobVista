@@ -27,7 +27,7 @@ import org.util.ConnectionClass;
 /**
  * Servlet Filter implementation class SignUpFilter
  */
-@WebFilter("/SignUpServlet")
+@WebFilter("/SignUp")
 public class SignUpFilter extends HttpFilter implements Filter {
        
     /**
