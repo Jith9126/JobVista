@@ -55,11 +55,14 @@ public class LoginServlet extends HttpServlet {
 		response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        
+        
 		
 		JSONObject jsonObject = (JSONObject) request.getAttribute("object");
 		
 		String email = null;
 		String password = null;
+		System.out.println("erty");
 		
 		try {
 			

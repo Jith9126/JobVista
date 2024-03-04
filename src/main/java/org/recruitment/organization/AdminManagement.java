@@ -58,7 +58,7 @@ public class AdminManagement {
 		
 		if(affectedRows > 0) {
 			preparedStatement = connection.prepareStatement(Constants.addUser);
-			preparedStatement.setString(1, "Admin");
+			preparedStatement.setString(1, "Panelist");
 			preparedStatement.setString(2, password);
 			preparedStatement.setString(3, email);
 			int addUser = preparedStatement.executeUpdate();
