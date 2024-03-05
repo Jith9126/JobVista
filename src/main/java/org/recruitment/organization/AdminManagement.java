@@ -336,14 +336,14 @@ public class AdminManagement {
 	    	int id = resultSet.getInt("Opening_Id");
 	    	JSONObject details = new JSONObject();
 	        details.put("id",id);
-	        details.put("Panelist_Id",resultSet.getInt("Panelist.Panelist_Id"));
+	        details.put("Panelist_Id",resultSet.getInt("Panelist_Id"));
 	        details.put("Description",resultSet.getString("Description"));
 	        details.put("Experience",resultSet.getInt("Experience"));
 	        details.put("Qualification",resultSet.getString("Qualification"));
 	        details.put("Departments",resultSet.getString("Departments"));
 	        details.put("EmploymentType",resultSet.getString("EmploymentType"));
 	        details.put("SalaryRange",resultSet.getString("SalaryRange"));
-	        details.put("Name",resultSet.getString("Panelist.Name"));
+	        details.put("Name",resultSet.getString("Name"));
 	        details.put("Start_Date",resultSet.getString("Start_Date"));
 	        details.put("End_Date",resultSet.getString("End_Date"));
 	        
