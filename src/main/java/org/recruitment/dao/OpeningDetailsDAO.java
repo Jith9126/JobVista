@@ -129,9 +129,9 @@ public class OpeningDetailsDAO {
 		return openingDetailsJSON;
 	}
 
-	public JSONObject getOpeningsForPanelist(int PanelistID) {
-		List<JSONObject> openingDetailsList = new ArrayList<>();
-		JSONObject openingDetailsJSON = new JSONObject();
+	public List<JSONObject> getOpeningsForPanelist(int PanelistID, List<JSONObject> openingDetailsList) {
+		List<JSONObject> openingDetailsListJSON = new ArrayList<>();
+//		JSONObject openingDetailsJSON = new JSONObject();
 		try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
 			String query = "SELECT o.Opening_Id AS Opening_Id, o.Department_Id AS Opening_Department_Id, "
 					+ "o.Description AS Opening_Description, o.Experience AS Opening_Experience, "
@@ -160,35 +160,139 @@ public class OpeningDetailsDAO {
 					JSONObject openingDetailsJSONForGettingDetails = new JSONObject();
 					try {
 						openingDetailsJSONForGettingDetails = mapResultSetToJSONForPanelist(resultSet,
-								openingDetailsList);
+								openingDetailsListJSON);
 //						openingDetailsList.add(openingDetailsJSONForGettingDetails);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 				}
-				openingDetailsJSON.put("openings", openingDetailsList);
-			} catch (JSONException e1) {
-				e1.printStackTrace();
+//				openingDetailsList.put("openings", openingDetailsListJSON);
+//			} catch (JSONException e1) {
+//				e1.printStackTrace();
+//			}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		return openingDetailsJSON;
+		return openingDetailsListJSON;
 	}
 
 	private JSONObject mapResultSetToJSONForPanelist(ResultSet resultSet, List<JSONObject> openingDetailsList)
 			throws SQLException, JSONException {
 		JSONObject openingDetailsJSON = new JSONObject();
 		openingDetailsList.add(getOpeningDetailsForPanelist(resultSet));
-//		openingDetailsJSON.put("Panelist", getPanelistDetails(resultSet));
-//		openingDetailsJSON.put("Organization", getOrganizationDetails(resultSet));
-//		openingDetailsJSON.put("Department", getDepartmentDetails(resultSet));
-//		openingDetailsJSON.put("Interviewers", getPanelistDetailsByOpeningId(resultSet.getLong("Opening_Id")));
-//		openingDetailsJSON.put("Template", getTemplateDetailsByOpeningId(resultSet.getLong("Opening_Id")));
-//		openingDetailsJSON.put("test", getTestsDetailsByOpeningId(resultSet.getLong("Opening_Id")));
-//		openingDetailsJSON.put("applicants", getApplicantsDetailsByOpeningId(resultSet.getLong("Opening_Id")));
-//		System.out.println(openingDetailsJSON.toString());
 		return openingDetailsJSON;
+	}
+
+	public List<JSONObject> getCurrentOpeningsForPanelist(int panelistID, List<JSONObject> openingDetailsList) {
+		List<JSONObject> openingDetailsListJSON = new ArrayList<>();
+//	    JSONObject openingDetailsJSON = new JSONObject();
+
+		try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
+			String query = "SELECT o.Opening_Id AS Opening_Id, o.Department_Id AS Opening_Department_Id, "
+					+ "o.Description AS Opening_Description, o.Experience AS Opening_Experience, "
+					+ "o.Qualification AS Opening_Qualification, o.Departments AS Opening_Departments, "
+					+ "o.EmploymentType AS Opening_EmploymentType, o.SalaryRange AS Opening_SalaryRange, "
+					+ "o.Panelist_Id AS Opening_Panelist_Id, o.Start_Date AS Opening_Start_Date, "
+					+ "o.End_Date AS Opening_End_Date, p.Panelist_Id AS Panelist_Panelist_Id, "
+					+ "p.Name AS Panelist_Name, p.Email AS Panelist_Email, p.Gender AS Panelist_Gender, "
+					+ "p.Department_Id AS Panelist_Department_Id, p.Org_Id AS Panelist_Org_Id, "
+					+ "p.Position AS Panelist_Position, d.Department_Id AS Department_Department_Id, "
+					+ "d.Title AS Department_Title, d.Org_Id AS Department_Org_Id, org1.Org_Id AS Org1_Id, "
+					+ "org1.Name AS Org1_Name, org1.TypeOfOrg AS Org1_TypeOfOrg, org1.Industry AS Org1_Industry, "
+					+ "org1.ContactEmail AS Org1_ContactEmail, org1.ContactNumber AS Org1_ContactNumber, "
+					+ "org2.Org_Id AS Org2_Id, org2.Name AS Org2_Name, org2.TypeOfOrg AS Org2_TypeOfOrg, "
+					+ "org2.Industry AS Org2_Industry, org2.ContactEmail AS Org2_ContactEmail, "
+					+ "org2.ContactNumber AS Org2_ContactNumber " + "FROM Openings o "
+					+ "JOIN Panelist p ON o.Panelist_Id = p.Panelist_Id "
+					+ "JOIN Departments d ON o.Department_Id = d.Department_Id "
+					+ "JOIN Organization org1 ON d.Org_Id = org1.Org_Id "
+					+ "JOIN Organization org2 ON p.Org_Id = org2.Org_Id "
+					+ "WHERE (p.Panelist_Id = ?) AND (CURRENT_DATE BETWEEN o.Start_Date AND COALESCE(o.End_Date, CURRENT_DATE));";
+
+			try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+				preparedStatement.setInt(1, panelistID);
+
+				try (ResultSet resultSet = preparedStatement.executeQuery()) {
+					while (resultSet.next()) {
+						JSONObject openingDetailsJSONForGettingDetails = new JSONObject();
+						try {
+							openingDetailsJSONForGettingDetails = mapResultSetToJSONForPanelist(resultSet,
+									openingDetailsListJSON);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+//					openingDetailsList.put("openings", openingDetailsListJSON);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return openingDetailsListJSON;
+	}
+	public List<JSONObject> getUpComingOpeningsForPanelist(int panelistID, List<JSONObject> openingDetailsList) {
+		List<JSONObject> openingDetailsListJSON = new ArrayList<>();
+//	    JSONObject openingDetailsJSON = new JSONObject();
+
+		try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
+			String query = "SELECT o.Opening_Id AS Opening_Id, o.Department_Id AS Opening_Department_Id, "
+			        + "o.Description AS Opening_Description, o.Experience AS Opening_Experience, "
+			        + "o.Qualification AS Opening_Qualification, o.Departments AS Opening_Departments, "
+			        + "o.EmploymentType AS Opening_EmploymentType, o.SalaryRange AS Opening_SalaryRange, "
+			        + "o.Panelist_Id AS Opening_Panelist_Id, o.Start_Date AS Opening_Start_Date, "
+			        + "o.End_Date AS Opening_End_Date, p.Panelist_Id AS Panelist_Panelist_Id, "
+			        + "p.Name AS Panelist_Name, p.Email AS Panelist_Email, p.Gender AS Panelist_Gender, "
+			        + "p.Department_Id AS Panelist_Department_Id, p.Org_Id AS Panelist_Org_Id, "
+			        + "p.Position AS Panelist_Position, d.Department_Id AS Department_Department_Id, "
+			        + "d.Title AS Department_Title, d.Org_Id AS Department_Org_Id, org1.Org_Id AS Org1_Id, "
+			        + "org1.Name AS Org1_Name, org1.TypeOfOrg AS Org1_TypeOfOrg, org1.Industry AS Org1_Industry, "
+			        + "org1.ContactEmail AS Org1_ContactEmail, org1.ContactNumber AS Org1_ContactNumber, "
+			        + "org2.Org_Id AS Org2_Id, org2.Name AS Org2_Name, org2.TypeOfOrg AS Org2_TypeOfOrg, "
+			        + "org2.Industry AS Org2_Industry, org2.ContactEmail AS Org2_ContactEmail, "
+			        + "org2.ContactNumber AS Org2_ContactNumber "
+			        + "FROM Openings o "
+			        + "JOIN Panelist p ON o.Panelist_Id = p.Panelist_Id "
+			        + "JOIN Departments d ON o.Department_Id = d.Department_Id "
+			        + "JOIN Organization org1 ON d.Org_Id = org1.Org_Id "
+			        + "JOIN Organization org2 ON p.Org_Id = org2.Org_Id "
+			        + "WHERE (p.Panelist_Id = ?) AND (o.Start_Date > CURRENT_DATE)";
+
+			try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+				preparedStatement.setInt(1, panelistID);
+
+				try (ResultSet resultSet = preparedStatement.executeQuery()) {
+					while (resultSet.next()) {
+						JSONObject openingDetailsJSONForGettingDetails = new JSONObject();
+						try {
+							openingDetailsJSONForGettingDetails = mapResultSetToJSONForPanelist(resultSet,openingDetailsListJSON);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+//					openingDetailsList.put("openings", openingDetailsListJSON);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return openingDetailsListJSON;
 	}
 
 	private JSONObject getOpeningDetails(ResultSet resultSet) throws SQLException, JSONException {
@@ -308,22 +412,23 @@ public class OpeningDetailsDAO {
 		return new JSONObject();
 	}
 
-//	private JSONObject getTestDetails(ResultSet resultSet) throws SQLException, JSONException {
-//		JSONObject testJSON = new JSONObject();
-//		long testId = resultSet.getLong("Test_Id");
-//		if (!resultSet.wasNull()) {
-//			testJSON.put("testId", testId);
-//			testJSON.put("testDate", resultSet.getDate("Test_Date"));
-//			testJSON.put("testTitle", resultSet.getString("Test_Title"));
-//			testJSON.put("testDuration", resultSet.getInt("Test_Duration"));
-//		} else {
-//			testJSON.put("tesmapTestResultSetToJSONtId", JSONObject.NULL);
-//			testJSON.put("testDate", JSONObject.NULL);
-//			testJSON.put("testTitle", JSONObject.NULL);
-//			testJSON.put("testDuration", JSONObject.NULL);
-//		}
-//		return testJSON;
-//	}
+	private JSONObject getTestDetails(ResultSet resultSet) throws SQLException, JSONException {
+		JSONObject testJSON = new JSONObject();
+		long testId = resultSet.getLong("Test_Id");
+		if (!resultSet.wasNull()) {
+			testJSON.put("testId", testId);
+			testJSON.put("testDate", resultSet.getDate("Test_Date"));
+			testJSON.put("testTitle", resultSet.getString("Test_Title"));
+			testJSON.put("testDuration", resultSet.getInt("Test_Duration"));
+		} else {
+			testJSON.put("tesmapTestResultSetToJSONtId", JSONObject.NULL);
+			testJSON.put("testDate", JSONObject.NULL);
+			testJSON.put("testTitle", JSONObject.NULL);
+			testJSON.put("testDuration", JSONObject.NULL);
+		}
+		return testJSON;
+	}
+
 	private JSONArray getTestsDetailsByOpeningId(long openingId) throws SQLException, JSONException {
 		String testQuery = "SELECT * FROM Test WHERE Opening_Id = ?;";
 		JSONArray testsArray = new JSONArray();
@@ -354,19 +459,20 @@ public class OpeningDetailsDAO {
 		return testsArray;
 	}
 
-//	private JSONObject getTestDetailsByOpeningId(long openingId) throws SQLException, JSONException {
-//		String testQuery = "SELECT * FROM Test WHERE Opening_Id = ?;";
-//		try (Connection connection = ConnectionClass.CreateCon().getConnection();
-//				PreparedStatement preparedStatement = connection.prepareStatement(testQuery)) {
-//			preparedStatement.setLong(1, openingId);
-//			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-//				if (resultSet.next()) {
-//					return mapTestResultSetToJSON(resultSet);
-//				}
-//			}
-//		}
-//		return new JSONObject(); 
-//	}
+	private JSONObject getTestDetailsByOpeningId(long openingId) throws SQLException, JSONException {
+		String testQuery = "SELECT * FROM Test WHERE Opening_Id = ?;";
+		try (Connection connection = ConnectionClass.CreateCon().getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(testQuery)) {
+			preparedStatement.setLong(1, openingId);
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.next()) {
+					return mapTestResultSetToJSON(resultSet);
+				}
+			}
+		}
+		return new JSONObject();
+	}
+
 	private JSONObject mapTestResultSetToJSON(ResultSet resultSet) throws SQLException, JSONException {
 		JSONObject testJSON = new JSONObject();
 		testJSON.put("testId", resultSet.getLong("Test_Id"));
@@ -426,8 +532,6 @@ public class OpeningDetailsDAO {
 
 	private boolean mapTemplateResultSetToJSONForPanelist(ResultSet resultSet, JSONObject testJSON)
 			throws SQLException, JSONException {
-//		JSONObject templateJSON = new JSONObject();
-//		templateJSON.put("templateId", resultSet.getLong("Template_Id"));
 		String typeofTest = resultSet.getString("TypeOfTest");
 		testJSON.put("templateTypeOfTest", typeofTest);
 		testJSON.put("templateRoundOn", resultSet.getInt("RoundOn"));
@@ -436,7 +540,6 @@ public class OpeningDetailsDAO {
 		} else {
 			return false;
 		}
-//		return testJSON;
 	}
 
 	private JSONObject mapTemplateResultSetToJSON(ResultSet resultSet) throws SQLException, JSONException {
@@ -447,32 +550,33 @@ public class OpeningDetailsDAO {
 		return templateJSON;
 	}
 
-//	private JSONArray getApplicantsArray(ResultSet resultSet) throws SQLException, JSONException {
-//		JSONArray applicantsArray = new JSONArray();
-//		long currentOpeningId = -1; // Initialize with a value not possible in your context
-//		while (resultSet.next()) {
-//			System.out.println("getApplicantsArray");
-//			long openingId = resultSet.getLong("Opening_Id");
-//			if (currentOpeningId == -1 || openingId != currentOpeningId) {
-//				System.out.println("Resetting applicantsArray for Opening_Id: " + openingId);
-//				applicantsArray = new JSONArray(); // Moved inside the if block
-//				currentOpeningId = openingId;
-//			}
-//			long applicantId = resultSet.getLong("Applicant_Id");
-//			// Fetch applicant details correctly from the ResultSet
-//			JSONObject applicantJSON = new JSONObject();
-//			applicantJSON.put("applicantGender", resultSet.getString("Applicant_Gender"));
-//			applicantJSON.put("applicantName", resultSet.getString("Applicant_Name"));
-//			applicantJSON.put("applicantQualification", resultSet.getString("Applicant_Qualification"));
-//			applicantJSON.put("applicantId", applicantId);
-//			applicantJSON.put("applicantEmail", resultSet.getString("Applicant_Email"));
-//			System.out.println(applicantId);
-//			System.out.println(applicantJSON.toString());
-//			applicantsArray.put(applicantJSON);
-//		}
-//		System.out.println(applicantsArray.toString());
-//		return applicantsArray;
-//	}
+	private JSONArray getApplicantsArray(ResultSet resultSet) throws SQLException, JSONException {
+		JSONArray applicantsArray = new JSONArray();
+		long currentOpeningId = -1; // Initialize with a value not possible in your context
+		while (resultSet.next()) {
+			System.out.println("getApplicantsArray");
+			long openingId = resultSet.getLong("Opening_Id");
+			if (currentOpeningId == -1 || openingId != currentOpeningId) {
+				System.out.println("Resetting applicantsArray for Opening_Id: " + openingId);
+				applicantsArray = new JSONArray(); // Moved inside the if block
+				currentOpeningId = openingId;
+			}
+			long applicantId = resultSet.getLong("Applicant_Id");
+			// Fetch applicant details correctly from the ResultSet
+			JSONObject applicantJSON = new JSONObject();
+			applicantJSON.put("applicantGender", resultSet.getString("Applicant_Gender"));
+			applicantJSON.put("applicantName", resultSet.getString("Applicant_Name"));
+			applicantJSON.put("applicantQualification", resultSet.getString("Applicant_Qualification"));
+			applicantJSON.put("applicantId", applicantId);
+			applicantJSON.put("applicantEmail", resultSet.getString("Applicant_Email"));
+			System.out.println(applicantId);
+			System.out.println(applicantJSON.toString());
+			applicantsArray.put(applicantJSON);
+		}
+		System.out.println(applicantsArray.toString());
+		return applicantsArray;
+	}
+
 	private JSONArray getApplicantsDetailsByOpeningId(long openingId) throws SQLException, JSONException {
 		String applicantsQuery = "SELECT A.Application_Id, A.Date, JS.Name AS Job_Seeker_Name, JS.Email AS Job_Seeker_Email, JS.DOB AS Job_Seeker_DOB, JS.Gender AS Job_Seeker_Gender, JS.Experience AS Job_Seeker_Experience, JS.Department_Id AS Job_Seeker_Department_Id, JS.Phone AS Job_Seeker_Phone, JS.Qualification AS Job_Seeker_Qualification FROM Application A JOIN Job_Seeker JS ON A.Job_Seeker_Id = JS.Job_Seeker_Id WHERE A.Opening_Id = ?;";
 		JSONArray applicantsArray = new JSONArray();
@@ -505,20 +609,6 @@ public class OpeningDetailsDAO {
 		return applicantsArray;
 	}
 
-//	private JSONArray getApplicantsDetailsByTestIdForPanelist(long openingId) throws SQLException, JSONException {
-//		String applicantsQuery = "SELECT A.Application_Id, A.Date, JS.Name AS Job_Seeker_Name, JS.Email AS Job_Seeker_Email, JS.DOB AS Job_Seeker_DOB, JS.Gender AS Job_Seeker_Gender, JS.Experience AS Job_Seeker_Experience, JS.Department_Id AS Job_Seeker_Department_Id, JS.Phone AS Job_Seeker_Phone, JS.Qualification AS Job_Seeker_Qualification FROM Application A JOIN Job_Seeker JS ON A.Job_Seeker_Id = JS.Job_Seeker_Id WHERE A.Opening_Id = ?;";
-//		JSONArray applicantsArray = new JSONArray();
-//		try (Connection connection = ConnectionClass.CreateCon().getConnection();
-//				PreparedStatement preparedStatement = connection.prepareStatement(applicantsQuery)) {
-//			preparedStatement.setLong(1, openingId);
-//			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-//				while (resultSet.next()) {
-//					applicantsArray.put(mapApplicantsResultSetToJSONArrayForPanelist(resultSet));
-//				}
-//			}
-//		}
-//		return applicantsArray;
-//	}
 	public JSONArray getApplicantsDetailsByOpeningId(int openingId) {
 		String applicantsQuery = "SELECT a.Application_Id, js.Name AS Job_Seeker_Name, js.Email AS Job_Seeker_Email, \n"
 				+ "       js.DOB AS Job_Seeker_DOB, js.Gender AS Job_Seeker_Gender, js.Experience AS Job_Seeker_Experience, \n"
@@ -580,11 +670,9 @@ public class OpeningDetailsDAO {
 			if (isFaceToFace) {
 				String FaceToFace = "SELECT NP.Panelist_Id AS Panelist_Id, NP.Job_Seeker_Id AS Job_Seeker_Id, NP.Review AS Review, NP.Points AS Points,\n"
 						+ "       P.Name AS Panelist_Name, P.Email AS Panelist_Email, P.Gender AS Panelist_Gender,\n"
-						+ "       P.Position AS Panelist_Position\n"
-						+ "FROM NotesFromPanelist NP\n"
-						+ "JOIN Panelist P ON NP.Panelist_Id = P.Panelist_Id\n"
-						+ "WHERE NP.Job_Seeker_Id = ?;\n";
-				
+						+ "       P.Position AS Panelist_Position\n" + "FROM NotesFromPanelist NP\n"
+						+ "JOIN Panelist P ON NP.Panelist_Id = P.Panelist_Id\n" + "WHERE NP.Job_Seeker_Id = ?;\n";
+
 				try (Connection connection = ConnectionClass.CreateCon().getConnection();
 						PreparedStatement preparedStatement = connection.prepareStatement(FaceToFace)) {
 					preparedStatement.setInt(1, Applicant_Id);
@@ -598,7 +686,7 @@ public class OpeningDetailsDAO {
 				}
 				applicantJSON.put("Review", applicantsReviewArray);
 			}
-			
+
 			applicantsArray.put(applicantJSON);
 		}
 		return applicantsArray;

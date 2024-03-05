@@ -1,6 +1,8 @@
 package org.servlet.panelist.opening;
 
+import java.io.Console;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -53,22 +55,57 @@ public class PanelistOpeningServlet extends HttpServlet {
 //				}
 //			}
 //		}
-
-		JSONObject openingDetailsList = OpeningDetailsDAO.getOpeningsForPanelist(PanelistID);
+		List<JSONObject> openingDetailsList = new ArrayList<>();
+		openingDetailsList = OpeningDetailsDAO.getOpeningsForPanelist(PanelistID,openingDetailsList);
+		System.out.println(openingDetailsList.toString());
+		
+		List<JSONObject> currentOpeningDetailsList = new ArrayList<>();
+		currentOpeningDetailsList = OpeningDetailsDAO.getCurrentOpeningsForPanelist(PanelistID,currentOpeningDetailsList);
+		System.out.println(currentOpeningDetailsList.toString());
+		
+		List<JSONObject> upComingOpeningDetailsList = new ArrayList<>();
+		upComingOpeningDetailsList = OpeningDetailsDAO.getUpComingOpeningsForPanelist(PanelistID,upComingOpeningDetailsList);
+		System.out.println(upComingOpeningDetailsList.toString());
+		
 		JSONObject jsonResponse = new JSONObject();
+		JSONObject jsonResponseForPanelist = new JSONObject();
+
 		try {
-			jsonResponse.put("Status", "Success");
-			jsonResponse.put("Value", openingDetailsList);
+		    jsonResponseForPanelist.put("openings", openingDetailsList);
+		    jsonResponseForPanelist.put("currentOpenings", currentOpeningDetailsList);
+		    jsonResponseForPanelist.put("upComingOpenings", upComingOpeningDetailsList);
+
+		    jsonResponse.put("Status", "Success");
+		    jsonResponse.put("Value", jsonResponseForPanelist);
+
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			e.printStackTrace();
+		    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		    e.printStackTrace();
 		}
 
 		response.setContentType("application/json");
 
 		// Write JSON response
 		response.getWriter().print(jsonResponse.toString());
+
+
+//		JSONObject jsonResponse = new JSONObject();
+//		JSONObject jsonResponseforPanelist = new JSONObject();
+//		try {
+//			jsonResponseforPanelist.put("openings", openingDetailsList);
+//			jsonResponseforPanelist.put("currentOpenings", currentOpeningDetailsList);
+//			jsonResponse.put("Status", "Success");
+//			jsonResponse.put("Value", jsonResponseforPanelist);
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//			e.printStackTrace();
+//		}
+//
+//		response.setContentType("application/json");
+//
+//		// Write JSON response
+//		response.getWriter().print(jsonResponse.toString());
 
 	}
 }
