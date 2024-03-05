@@ -66,6 +66,7 @@ public class AddPanelist extends HttpServlet {
         Cookie[] cookies = request.getCookies();
 		String orgId = "1";
 		String adminId = null;
+		
         if (cookies != null) {
             
         	for(Cookie cookie:cookies) {

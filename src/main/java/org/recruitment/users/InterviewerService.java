@@ -1,6 +1,7 @@
 package org.recruitment.users;
 
 import org.util.ConnectionClass;
+import org.util.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,5 +35,21 @@ public class InterviewerService {
             }
         }
     }
+	public boolean addPanelistToOpening(int openingId, String email) {
+		Connection conn = ConnectionClass.CreateCon().getConnection();
+		PreparedStatement assinginterviwers;
+		try {
+			assinginterviwers = conn.prepareStatement(Constants.assignPanelistToOpenings);
+			assinginterviwers.setString(1, email);
+			assinginterviwers.setInt(2,openingId);
+			
+			assinginterviwers.executeUpdate();
+			System.out.println("Working\n" +assinginterviwers);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
 
 }
