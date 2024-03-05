@@ -11,8 +11,8 @@ public class ConnectionClass {
 	private ConnectionClass(){
 		
 		try {
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		conn = DriverManager.getConnection(
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/JobVista","ragavi-zstk352", "Karagavi3/"
         );
 		}catch (SQLException e) {
@@ -25,7 +25,7 @@ public class ConnectionClass {
 	
 	
 	public static ConnectionClass CreateCon(){			
-
+//		Problem in Connection
 		if(currConnection instanceof ConnectionClass) {
 			return currConnection;
 		}
