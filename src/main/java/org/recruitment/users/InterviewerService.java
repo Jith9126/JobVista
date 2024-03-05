@@ -23,12 +23,13 @@ public class InterviewerService {
 
     public void setMarks(int jobSeekerId, int testId, int marks, String status) throws SQLException {
         try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
-            String query = "INSERT INTO Result (Job_Seeker_Id, Test_Id, Points, Status) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO Result (Job_Seeker_Id, Test_Id, Status, Points) VALUES (?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, jobSeekerId);
                 preparedStatement.setInt(2, testId);
-                preparedStatement.setInt(3, marks);
-                preparedStatement.setString(4, status);
+                preparedStatement.setString(3, status);
+                preparedStatement.setInt(4, marks);
+                
                 preparedStatement.executeUpdate();
             }
         }
