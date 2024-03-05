@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Iterator;
 import java.util.List;
 
@@ -141,14 +143,23 @@ public class CreateOpening extends HttpServlet {
             
             
 //            testJson
-            Test newTest = new Test(testJson.getString("title"), new Date(testJson.getLong("date")), testJson.getInt("duration"), testJson.getString("typeOfTest"));
-			
+            
+            LocalDate date = LocalDate.parse(testJson.getString("date"));
+            
+            Date date2 = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            
+//            Date today = new Date(date);
+            
+            System.out.println("Before test");
+            
+			Test newTest = new Test(testJson.getString("title"), date2, testJson.getInt("duration"), testJson.getString("typeOfTest"));
+            System.out.println("justBefore test");
 			TestManager.getTestManager().addTest(OpeningId, newTest);
             
 
             logger.info("Opening added successfully.");
             
-            
+            System.out.println("After test");
             responseJson.put("status",200);
             responseJson.put("openingId",OpeningId);
             
