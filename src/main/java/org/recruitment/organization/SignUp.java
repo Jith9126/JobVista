@@ -29,12 +29,13 @@ public class SignUp {
 			int addUser = preparedStatement.executeUpdate();
 			
 			if(addUser>0) {
-				logger.info("Failed to add admin");
-				return "Failed to add Admin";
+				logger.info("Admin sucessfully added");
+				return "Admin successfully added";
 			}
 		}
-		logger.info("Admin sucessfully added");
-		return "Admin successfully added";
+		logger.info("Failed to add admin");
+		return "Failed to add Admin";
+		
 	}
 	
 	public String addOrganisation(String orgName, String orgType, String industry, String contactEmail, String contactNumber, String adminName, String adminEmail, String adminPassword) throws SQLException {
