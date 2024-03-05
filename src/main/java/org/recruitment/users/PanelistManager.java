@@ -41,31 +41,30 @@ public class PanelistManager {
 	
 	
 	
-	public int addOpening(Panelist panelist, Openings opening, List<Panelist> interviwers) throws Exception {
+	public int addOpening(int panelistId, Openings opening, List<Panelist> interviwers) throws Exception {
 		
 		try {
 			Logger log = CommonLogger.getCommon().getLogger(PanelistManager.class);
 			
 			
 		Connection conn = ConnectionClass.CreateCon().getConnection();
-		if(panelist.getPosition().equalsIgnoreCase("Manager")){
-			
+//		if(panelist.getPosition().equalsIgnoreCase("Manager")){
+		
 				Statement countOfOpeningsStatement = conn.createStatement();
 				int count = 10000;
 				ResultSet countOfOpeningsSet = countOfOpeningsStatement.executeQuery(Constants.countOfOpenings);
 				if(countOfOpeningsSet.next()) {
-					count += countOfOpeningsSet.getInt(1);
+					count += countOfOpeningsSet.getInt("count");
 				}
+			
+				
 				int departmentId = 0;
-				int panelistID = 0;
 				PreparedStatement selectDepartmentAndPanelistId = conn.prepareStatement(Constants.selectDepartmentandPanelist);
-				selectDepartmentAndPanelistId.setString(1, panelist.getEmail());
-				selectDepartmentAndPanelistId.setString(2, panelist.getName());
+				selectDepartmentAndPanelistId.setInt(1, panelistId);
 				
 				ResultSet departmentPenelistId = selectDepartmentAndPanelistId.executeQuery();
 				if(departmentPenelistId.next()) {
 					departmentId = departmentPenelistId.getInt("Department_Id");
-					panelistID = departmentPenelistId.getInt("Panelist_Id");
 				}
 				
 				PreparedStatement createAnewOpening = conn.prepareStatement(Constants.insertIntoOpenings);
@@ -77,7 +76,7 @@ public class PanelistManager {
 				createAnewOpening.setString(6, opening.getDepartments());
 				createAnewOpening.setString(7, opening.getEmploymentType());
 				createAnewOpening.setString(8, opening.getSalaryRange());
-				createAnewOpening.setInt(9, panelistID);
+				createAnewOpening.setInt(9, panelistId);
 				
 				
 				
@@ -87,9 +86,9 @@ public class PanelistManager {
 				
 				for (Panelist currPanelist: interviwers ) {
 					PreparedStatement assinginterviwers = conn.prepareStatement(Constants.assignPanelistToOpenings);
-					assinginterviwers.setString(1, currPanelist.getName());
-					assinginterviwers.setString(2, currPanelist.getEmail());
-					assinginterviwers.setInt(3,count);
+//					assinginterviwers.setString(1, currPanelist.getName());
+					assinginterviwers.setString(1, currPanelist.getEmail());
+					assinginterviwers.setInt(2,count);
 					
 					assinginterviwers.executeUpdate();
 					
@@ -102,10 +101,10 @@ public class PanelistManager {
 	            }
 	            
 	            return count;
-			}else {
-				throw new Exception("You are Not a manager");
-			}
-			
+//			}else {
+//				throw new Exception("You are Not a manager");
+//			}
+//			
 		}
 		catch (SQLException e) {
 			// TODO: handle exception
