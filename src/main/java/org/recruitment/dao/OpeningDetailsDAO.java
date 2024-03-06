@@ -14,7 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.util.ConnectionClass;
 
-public class OpeningDetailsDAO {
+public class OpeningDetailsDAO<E> {
 
 	public List<JSONObject> getAllUpComingOpenings() {
 		List<JSONObject> openingDetailsList = new ArrayList<>();
@@ -241,32 +241,32 @@ public class OpeningDetailsDAO {
 		}
 		return openingDetailsListJSON;
 	}
+
 	public List<JSONObject> getUpComingOpeningsForPanelist(int panelistID, List<JSONObject> openingDetailsList) {
 		List<JSONObject> openingDetailsListJSON = new ArrayList<>();
 //	    JSONObject openingDetailsJSON = new JSONObject();
 
 		try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
 			String query = "SELECT o.Opening_Id AS Opening_Id, o.Department_Id AS Opening_Department_Id, "
-			        + "o.Description AS Opening_Description, o.Experience AS Opening_Experience, "
-			        + "o.Qualification AS Opening_Qualification, o.Departments AS Opening_Departments, "
-			        + "o.EmploymentType AS Opening_EmploymentType, o.SalaryRange AS Opening_SalaryRange, "
-			        + "o.Panelist_Id AS Opening_Panelist_Id, o.Start_Date AS Opening_Start_Date, "
-			        + "o.End_Date AS Opening_End_Date, p.Panelist_Id AS Panelist_Panelist_Id, "
-			        + "p.Name AS Panelist_Name, p.Email AS Panelist_Email, p.Gender AS Panelist_Gender, "
-			        + "p.Department_Id AS Panelist_Department_Id, p.Org_Id AS Panelist_Org_Id, "
-			        + "p.Position AS Panelist_Position, d.Department_Id AS Department_Department_Id, "
-			        + "d.Title AS Department_Title, d.Org_Id AS Department_Org_Id, org1.Org_Id AS Org1_Id, "
-			        + "org1.Name AS Org1_Name, org1.TypeOfOrg AS Org1_TypeOfOrg, org1.Industry AS Org1_Industry, "
-			        + "org1.ContactEmail AS Org1_ContactEmail, org1.ContactNumber AS Org1_ContactNumber, "
-			        + "org2.Org_Id AS Org2_Id, org2.Name AS Org2_Name, org2.TypeOfOrg AS Org2_TypeOfOrg, "
-			        + "org2.Industry AS Org2_Industry, org2.ContactEmail AS Org2_ContactEmail, "
-			        + "org2.ContactNumber AS Org2_ContactNumber "
-			        + "FROM Openings o "
-			        + "JOIN Panelist p ON o.Panelist_Id = p.Panelist_Id "
-			        + "JOIN Departments d ON o.Department_Id = d.Department_Id "
-			        + "JOIN Organization org1 ON d.Org_Id = org1.Org_Id "
-			        + "JOIN Organization org2 ON p.Org_Id = org2.Org_Id "
-			        + "WHERE (p.Panelist_Id = ?) AND (o.Start_Date > CURRENT_DATE)";
+					+ "o.Description AS Opening_Description, o.Experience AS Opening_Experience, "
+					+ "o.Qualification AS Opening_Qualification, o.Departments AS Opening_Departments, "
+					+ "o.EmploymentType AS Opening_EmploymentType, o.SalaryRange AS Opening_SalaryRange, "
+					+ "o.Panelist_Id AS Opening_Panelist_Id, o.Start_Date AS Opening_Start_Date, "
+					+ "o.End_Date AS Opening_End_Date, p.Panelist_Id AS Panelist_Panelist_Id, "
+					+ "p.Name AS Panelist_Name, p.Email AS Panelist_Email, p.Gender AS Panelist_Gender, "
+					+ "p.Department_Id AS Panelist_Department_Id, p.Org_Id AS Panelist_Org_Id, "
+					+ "p.Position AS Panelist_Position, d.Department_Id AS Department_Department_Id, "
+					+ "d.Title AS Department_Title, d.Org_Id AS Department_Org_Id, org1.Org_Id AS Org1_Id, "
+					+ "org1.Name AS Org1_Name, org1.TypeOfOrg AS Org1_TypeOfOrg, org1.Industry AS Org1_Industry, "
+					+ "org1.ContactEmail AS Org1_ContactEmail, org1.ContactNumber AS Org1_ContactNumber, "
+					+ "org2.Org_Id AS Org2_Id, org2.Name AS Org2_Name, org2.TypeOfOrg AS Org2_TypeOfOrg, "
+					+ "org2.Industry AS Org2_Industry, org2.ContactEmail AS Org2_ContactEmail, "
+					+ "org2.ContactNumber AS Org2_ContactNumber " + "FROM Openings o "
+					+ "JOIN Panelist p ON o.Panelist_Id = p.Panelist_Id "
+					+ "JOIN Departments d ON o.Department_Id = d.Department_Id "
+					+ "JOIN Organization org1 ON d.Org_Id = org1.Org_Id "
+					+ "JOIN Organization org2 ON p.Org_Id = org2.Org_Id "
+					+ "WHERE (p.Panelist_Id = ?) AND (o.Start_Date > CURRENT_DATE)";
 
 			try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 				preparedStatement.setInt(1, panelistID);
@@ -275,7 +275,8 @@ public class OpeningDetailsDAO {
 					while (resultSet.next()) {
 						JSONObject openingDetailsJSONForGettingDetails = new JSONObject();
 						try {
-							openingDetailsJSONForGettingDetails = mapResultSetToJSONForPanelist(resultSet,openingDetailsListJSON);
+							openingDetailsJSONForGettingDetails = mapResultSetToJSONForPanelist(resultSet,
+									openingDetailsListJSON);
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -577,23 +578,57 @@ public class OpeningDetailsDAO {
 		return applicantsArray;
 	}
 
+//	private JSONArray getApplicantsDetailsByOpeningId(long openingId) throws SQLException, JSONException {
+//		String applicantsQuery = "SELECT A.Application_Id, A.Date, JS.Name AS Job_Seeker_Name, JS.Email AS Job_Seeker_Email, JS.DOB AS Job_Seeker_DOB, JS.Gender AS Job_Seeker_Gender, JS.Experience AS Job_Seeker_Experience, JS.Department_Id AS Job_Seeker_Department_Id, JS.Phone AS Job_Seeker_Phone, JS.Qualification AS Job_Seeker_Qualification FROM Application A JOIN Job_Seeker JS ON A.Job_Seeker_Id = JS.Job_Seeker_Id WHERE A.Opening_Id = ?;";
+//		JSONArray applicantsArray = new JSONArray();
+//		try (Connection connection = ConnectionClass.CreateCon().getConnection();
+//				PreparedStatement preparedStatement = connection.prepareStatement(applicantsQuery)) {
+//			preparedStatement.setLong(1, openingId);
+//			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//				while (resultSet.next()) {
+//					applicantsArray.put(mapApplicantsResultSetToJSONArray(resultSet));
+//				}
+//			}
+//		}
+//		return applicantsArray;
+//	}
 	private JSONArray getApplicantsDetailsByOpeningId(long openingId) throws SQLException, JSONException {
-		String applicantsQuery = "SELECT A.Application_Id, A.Date, JS.Name AS Job_Seeker_Name, JS.Email AS Job_Seeker_Email, JS.DOB AS Job_Seeker_DOB, JS.Gender AS Job_Seeker_Gender, JS.Experience AS Job_Seeker_Experience, JS.Department_Id AS Job_Seeker_Department_Id, JS.Phone AS Job_Seeker_Phone, JS.Qualification AS Job_Seeker_Qualification FROM Application A JOIN Job_Seeker JS ON A.Job_Seeker_Id = JS.Job_Seeker_Id WHERE A.Opening_Id = ?;";
-		JSONArray applicantsArray = new JSONArray();
+	    String applicantsQuery = "SELECT A.Application_Id, A.Date, JS.Name AS Job_Seeker_Name, JS.Email AS Job_Seeker_Email, JS.DOB AS Job_Seeker_DOB, JS.Gender AS Job_Seeker_Gender, JS.Experience AS Job_Seeker_Experience, JS.Department_Id AS Job_Seeker_Department_Id, JS.Phone AS Job_Seeker_Phone, JS.Qualification AS Job_Seeker_Qualification FROM Application A JOIN Job_Seeker JS ON A.Job_Seeker_Id = JS.Job_Seeker_Id WHERE A.Opening_Id = ?;";
+	    JSONArray applicantsArray = new JSONArray();
+	    try (Connection connection = ConnectionClass.CreateCon().getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(applicantsQuery)) {
+	        preparedStatement.setLong(1, openingId);
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	            while (resultSet.next()) {
+	                JSONObject applicantObject = mapApplicantsResultSetToJSONArraywithSocial(resultSet);
+	                JSONArray socialMediaArray = getSocialMediaDetails(resultSet.getLong("Application_Id"));
+	                applicantObject.put("SocialMedia", socialMediaArray);
+	                applicantsArray.put(applicantObject);
+	            }
+	        }
+	    }
+	    return applicantsArray;
+	}
+
+	private JSONArray getSocialMediaDetails(long jobSeekerId) throws SQLException, JSONException {
+		String socialMediaQuery = "SELECT Link, Platform FROM SocialMedia WHERE Job_Seeker_Id = ?;";
+		JSONArray socialMediaArray = new JSONArray();
 		try (Connection connection = ConnectionClass.CreateCon().getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(applicantsQuery)) {
-			preparedStatement.setLong(1, openingId);
+				PreparedStatement preparedStatement = connection.prepareStatement(socialMediaQuery)) {
+			preparedStatement.setLong(1, jobSeekerId);
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
 				while (resultSet.next()) {
-					applicantsArray.put(mapApplicantsResultSetToJSONArray(resultSet));
+					JSONObject socialMediaObject = new JSONObject();
+					socialMediaObject.put("Link", resultSet.getString("Link"));
+					socialMediaObject.put("Platform", resultSet.getString("Platform"));
+					socialMediaArray.put(socialMediaObject);
 				}
 			}
 		}
-		return applicantsArray;
+		return socialMediaArray;
 	}
 
-	private JSONArray getApplicantsDetailsByTestId(long Test_Id, boolean isFaceToFace)
-			throws SQLException, JSONException {
+	private JSONArray getApplicantsDetailsByTestId(long Test_Id, boolean isFaceToFace){
 		String applicantsQuery = "SELECT A.Application_Id, A.Date, JS.Job_Seeker_Id AS Job_Seeker_Id,JS.Name AS Job_Seeker_Name, JS.Email AS Job_Seeker_Email, JS.DOB AS Job_Seeker_DOB, JS.Gender AS Job_Seeker_Gender, JS.Experience AS Job_Seeker_Experience, JS.Department_Id AS Job_Seeker_Department_Id, JS.Phone AS Job_Seeker_Phone, JS.Qualification AS Job_Seeker_Qualification, R.Status, R.Points FROM Application A JOIN Job_Seeker JS ON A.Job_Seeker_Id = JS.Job_Seeker_Id JOIN Result R ON A.Job_Seeker_Id = R.Job_Seeker_Id WHERE R.Test_Id = ?;";
 
 		JSONArray applicantsArray = new JSONArray();
@@ -604,9 +639,28 @@ public class OpeningDetailsDAO {
 				while (resultSet.next()) {
 					applicantsArray.put(mapApplicantsResultSetToJSONArrayForPanelist(resultSet, isFaceToFace));
 				}
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return applicantsArray;
+
+//	    JSONArray applicantsArray = new JSONArray();
+//	    try (Connection connection = ConnectionClass.CreateCon().getConnection();
+//	         PreparedStatement preparedStatement = connection.prepareStatement(applicantsQuery)) {
+//	        preparedStatement.setLong(1, openingId);
+//	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//	            while (resultSet.next()) {
+//	                JSONObject applicantObject = mapApplicantsResultSetToJSONArraywithSocial(resultSet);
+//	                JSONArray socialMediaArray = getSocialMediaDetails(resultSet.getLong("Application_Id"));
+//	                applicantObject.put("SocialMedia", socialMediaArray);
+//	                applicantsArray.put(applicantObject);
+//	            }
+//	        }
+//	    }
+//	    return applicantsArray;
 	}
 
 	public JSONArray getApplicantsDetailsByOpeningId(int openingId) {
@@ -627,6 +681,21 @@ public class OpeningDetailsDAO {
 		}
 		return new JSONArray();
 	}
+	private JSONObject mapApplicantsResultSetToJSONArraywithSocial(ResultSet resultSet) throws SQLException, JSONException {
+	    JSONObject applicantObject = new JSONObject();
+
+	    applicantObject.put("applicationId", resultSet.getLong("Application_Id"));
+	    applicantObject.put("date", resultSet.getDate("Date"));
+	    applicantObject.put("jobSeekerName", resultSet.getString("Job_Seeker_Name"));
+	    applicantObject.put("jobSeekerEmail", resultSet.getString("Job_Seeker_Email"));
+	    applicantObject.put("jobSeekerDOB", resultSet.getDate("Job_Seeker_DOB"));
+	    applicantObject.put("jobSeekerGender", resultSet.getString("Job_Seeker_Gender"));
+	    applicantObject.put("jobSeekerExperience", resultSet.getInt("Job_Seeker_Experience"));
+		applicantObject.put("jobSeekerDepartmentId", resultSet.getLong("Job_Seeker_Department_Id"));
+		applicantObject.put("jobSeekerPhone", resultSet.getString("Job_Seeker_Phone"));
+		applicantObject.put("jobSeekerQualification", resultSet.getString("Job_Seeker_Qualification"));
+	    return applicantObject;
+	}
 
 	private JSONArray mapApplicantsResultSetToJSONArray(ResultSet resultSet) throws SQLException, JSONException {
 		JSONArray applicantsArray = new JSONArray();
@@ -642,6 +711,7 @@ public class OpeningDetailsDAO {
 			applicantJSON.put("jobSeekerDepartmentId", resultSet.getLong("Job_Seeker_Department_Id"));
 			applicantJSON.put("jobSeekerPhone", resultSet.getString("Job_Seeker_Phone"));
 			applicantJSON.put("jobSeekerQualification", resultSet.getString("Job_Seeker_Qualification"));
+//			applicantJSON.put("jobSeekersocialMedia", new ArrayList<>());
 			applicantsArray.put(applicantJSON);
 		}
 		return applicantsArray;
@@ -686,6 +756,10 @@ public class OpeningDetailsDAO {
 				}
 				applicantJSON.put("Review", applicantsReviewArray);
 			}
+	        JSONArray socialMediaArray = getSocialMediaDetails(Applicant_Id);
+	        applicantJSON.put("SocialMedia", socialMediaArray);
+
+//	        applicantsArray.put(applicantJSON);
 
 			applicantsArray.put(applicantJSON);
 		}

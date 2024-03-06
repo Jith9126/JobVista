@@ -57,15 +57,12 @@ public class PanelistOpeningServlet extends HttpServlet {
 //		}
 		List<JSONObject> openingDetailsList = new ArrayList<>();
 		openingDetailsList = OpeningDetailsDAO.getOpeningsForPanelist(PanelistID,openingDetailsList);
-		System.out.println(openingDetailsList.toString());
 		
 		List<JSONObject> currentOpeningDetailsList = new ArrayList<>();
 		currentOpeningDetailsList = OpeningDetailsDAO.getCurrentOpeningsForPanelist(PanelistID,currentOpeningDetailsList);
-		System.out.println(currentOpeningDetailsList.toString());
 		
 		List<JSONObject> upComingOpeningDetailsList = new ArrayList<>();
 		upComingOpeningDetailsList = OpeningDetailsDAO.getUpComingOpeningsForPanelist(PanelistID,upComingOpeningDetailsList);
-		System.out.println(upComingOpeningDetailsList.toString());
 		
 		JSONObject jsonResponse = new JSONObject();
 		JSONObject jsonResponseForPanelist = new JSONObject();
