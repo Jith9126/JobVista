@@ -6,11 +6,9 @@ import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -50,20 +48,10 @@ public class AddDepartment extends HttpServlet {
 	    
 	    JSONObject responseData = new JSONObject();
 	    AdminManagement adminManagement = new AdminManagement();
-	    Cookie[] cookies = request.getCookies();
-		String orgId = "1";
-		String adminId = null;
-        if (cookies != null) {
-            
-        	for(Cookie cookie:cookies) {
-        		if(cookie.getName().equalsIgnoreCase("org_Id")) {
-        			orgId = cookie.getValue();
-            	}
-        		if(cookie.getName().equalsIgnoreCase("admin_Id")) {
-        			adminId = cookie.getValue();
-        		}
-        	}
-        }
+	    
+		int orgId = 0; 
+		int adminId = 0;
+
 	    try {
 	       
 	        StringBuilder sb = new StringBuilder();
@@ -77,8 +65,11 @@ public class AddDepartment extends HttpServlet {
 	        JSONObject jsonObject = new JSONObject(sb.toString());
 	        String title = jsonObject.getString("title");
 	        String description = jsonObject.getString("description");
+	        JSONObject userDetails = jsonObject.getJSONObject("userDetails");
+			orgId = userDetails.getInt("Org_Id");
+			adminId = userDetails.getInt("Admin_Id");
 	        responseData.put("statusCode", 200);
-	        responseData.put("message",adminManagement.addDepartment(title, description, Integer.parseInt(orgId)));
+	        responseData.put("message",adminManagement.addDepartment(title, description, orgId));
 	        
 	    } 
 	    

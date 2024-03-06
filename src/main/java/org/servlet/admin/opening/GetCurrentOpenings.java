@@ -1,5 +1,6 @@
 package org.servlet.admin.opening;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -9,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -56,23 +58,33 @@ public class GetCurrentOpenings extends HttpServlet {
 	    
 	    JSONObject responseData = new JSONObject();
 		AdminManagement adminManagement = new AdminManagement();
-		Cookie[] cookies = request.getCookies();
-		String orgId = "1";
-		String adminId = null;
-        if (cookies != null) {
-            
-        	for(Cookie cookie:cookies) {
-        		if(cookie.getName().equalsIgnoreCase("org_Id")) {
-        			orgId = cookie.getValue();
-            	}
-        		if(cookie.getName().equalsIgnoreCase("admin_Id")) {
-        			adminId = cookie.getValue();
-        		}
-        	}
+		StringBuilder sb = new StringBuilder();
+        BufferedReader reader = request.getReader();
+        String line;
+        
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
         }
+		
+		int orgId = 0;
+		int adminId = 0;
+		try {
+			JSONObject jsonObject = new JSONObject(sb.toString());
+			JSONObject userDetails = jsonObject.getJSONObject("userDetails");
+			orgId = userDetails.getInt("Org_Id");
+			adminId = userDetails.getInt("Admin_Id");
+		
+		} 
+		
+		catch (JSONException e) {
+		
+			logger.error("json exception while getting data from json object \n"+e.getMessage());
+		
+		}
+		
         
         try {
-        	JSONArray openingsData = adminManagement.getCurrentOpenings(Integer.parseInt(orgId));
+        	JSONArray openingsData = adminManagement.getCurrentOpenings(orgId);
         	
         	responseData.put("statusCode", 200);
 			responseData.put("message", openingsData);

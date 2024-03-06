@@ -1,11 +1,11 @@
 package org.servlet.admin.graph;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,38 +42,57 @@ public class Graphs extends HttpServlet {
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
 		doPost(request, response);
 	}
-
+	protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    
+		response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
 	    JSONObject responseData = new JSONObject();
 		AdminManagement adminManagement = new AdminManagement();
-		Cookie[] cookies = request.getCookies();
-		String orgId = "1";
-		String adminId = null;
 		
-        if (cookies != null) {
-            
-        	for(Cookie cookie:cookies) {
-        		if(cookie.getName().equalsIgnoreCase("org_Id")) {
-        			orgId = cookie.getValue();
-            	}
-        		if(cookie.getName().equalsIgnoreCase("admin_Id")) {
-        			adminId = cookie.getValue();
-        		}
-        	}
-        }	
+		StringBuilder sb = new StringBuilder();
+        BufferedReader reader = request.getReader();
+        String line;
+        
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+		
+		int orgId = 0;
+		int adminId = 0;
+		try {
+			JSONObject jsonObject = new JSONObject(sb.toString());
+			JSONObject userDetails = jsonObject.getJSONObject("userDetails");
+			orgId = userDetails.getInt("Org_Id");
+			adminId = userDetails.getInt("Admin_Id");
+		
+		} 
+		
+		catch (JSONException e) {
+		
+			logger.error("json exception while getting data from json object \n"+e.getMessage());
+		
+		}
+		
 	    try {
 	        
-	        JSONObject openingGraphWithDepartments = adminManagement.getOpeningGraphWithDepartments(Integer.parseInt(orgId));
-	        JSONObject openingsGraphByMonth = adminManagement.getOpeningsGraphByMonth(Integer.parseInt(orgId));
-	        JSONObject applicantsStatusGraph = adminManagement.getApplicantsStatusGraph(Integer.parseInt(orgId));
-	        JSONObject selectedApplicantsGraphInDepartments = adminManagement.selectedApplicantsGraphInDepartments(Integer.parseInt(orgId));
-	        JSONObject selectedApplicantsGraphInMonth = adminManagement.selectedApplicantsGraphInMonth(Integer.parseInt(orgId));
-	        JSONObject differenceInYearByOpenings = adminManagement.differenceInYearByOpenings(Integer.parseInt(orgId));
-	        JSONObject differenceInMonthByHired = adminManagement.differenceInMonthByHired(Integer.parseInt(orgId));
+	        JSONObject openingGraphWithDepartments = adminManagement.getOpeningGraphWithDepartments(orgId);
+	        JSONObject openingsGraphByMonth = adminManagement.getOpeningsGraphByMonth(orgId);
+	        JSONObject applicantsStatusGraph = adminManagement.getApplicantsStatusGraph(orgId);
+	        JSONObject selectedApplicantsGraphInDepartments = adminManagement.selectedApplicantsGraphInDepartments(orgId);
+	        JSONObject selectedApplicantsGraphInMonth = adminManagement.selectedApplicantsGraphInMonth(orgId);
+	        JSONObject differenceInYearByOpenings = adminManagement.differenceInYearByOpenings(orgId);
+	        JSONObject differenceInMonthByHired = adminManagement.differenceInMonthByHired(orgId);
 	        
 	        responseData.put("statusCode", 200);
 	        responseData.put("openingGraphWithDepartments", openingGraphWithDepartments);

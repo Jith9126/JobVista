@@ -11,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -51,17 +52,8 @@ public class RemovePanelist extends HttpServlet {
         
         JSONObject responseData = new JSONObject();
         AdminManagement adminManagement = new AdminManagement();
-        Cookie[] cookies = request.getCookies();
-		String adminId = null;
-        if (cookies != null) {
-            
-        	for(Cookie cookie:cookies) {
-        		if(cookie.getName().equalsIgnoreCase("admin_Id")) {
-        			adminId = cookie.getValue();
-        		}
-        	}
-        }
-        
+       
+        int adminId = 0;
         try {
            
             StringBuilder sb = new StringBuilder();
@@ -73,6 +65,10 @@ public class RemovePanelist extends HttpServlet {
             }
             
             JSONObject jsonObject = new JSONObject(sb.toString());
+            
+            JSONObject userDetails = jsonObject.getJSONObject("userDetails");
+			adminId = userDetails.getInt("Admin_Id");
+		
             int panelistId = jsonObject.getInt("panelistId");
             boolean removed = adminManagement.removePanelist(panelistId);
             

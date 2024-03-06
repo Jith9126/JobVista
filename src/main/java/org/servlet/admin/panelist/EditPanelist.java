@@ -11,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -40,17 +41,8 @@ public class EditPanelist extends HttpServlet {
         String line;
         JSONObject responseData = new JSONObject();
         AdminManagement adminManagement = new AdminManagement();
-        Cookie[] cookies = request.getCookies();
-		String adminId = null;
-        if (cookies != null) {
-            
-        	for(Cookie cookie:cookies) {
-        		if(cookie.getName().equalsIgnoreCase("admin_Id")) {
-        			adminId = cookie.getValue();
-        		}
-        	}
-        }
-        
+         
+        int adminId = 0;
         while ((line = reader.readLine()) != null) {
             sb.append(line);
         }
@@ -59,6 +51,10 @@ public class EditPanelist extends HttpServlet {
         	
             JSONObject jsonObject = new JSONObject(sb.toString());
             int panelistId = jsonObject.getInt("panelistId");
+            
+            JSONObject userDetails = jsonObject.getJSONObject("userDetails");
+			adminId = userDetails.getInt("Admin_Id");
+		
             JSONObject panelistDetails = jsonObject.getJSONObject("panelistDetails");
             boolean edited = adminManagement.editPanelist(panelistId, panelistDetails);
             

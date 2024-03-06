@@ -27,7 +27,7 @@ import org.util.ConnectionClass;
 /**
  * Servlet Filter implementation class SignUpFilter
  */
-//@WebFilter("/SignUp")
+@WebFilter("/SignUp")
 public class SignUpFilter extends HttpFilter implements Filter {
        
     /**
@@ -99,9 +99,8 @@ public class SignUpFilter extends HttpFilter implements Filter {
 			e.printStackTrace();
 		}
 		
-		String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+		String passwordRegex = "^(?=.*\\d)(?=.*[a-zA-Z].*[a-zA-Z].*[a-zA-Z]).{8,}$";
 		String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-
 	    // Validate if user or organization already exists
 	    try {
 			if (isUserExists(adminEmail) || isOrganizationExists(orgName) || !adminPassword.matches(passwordRegex) || !adminEmail.matches(emailRegex)) {

@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.util.ConnectionClass;
 import org.util.Constants;
 
@@ -30,7 +32,7 @@ public class Login {
         return "Invalid email or password";
 	}
 	
-	public Cookie[] updateSession(String email) throws SQLException {
+	public JSONObject updateSession(String email) throws SQLException, JSONException {
 	    String sessionId = UUID.randomUUID().toString();
 	    ConnectionClass db = ConnectionClass.CreateCon();
 	    Connection connection = db.getConnection();
@@ -42,54 +44,52 @@ public class Login {
 
 	    Cookie sessionIdCookie = new Cookie("session_Id", sessionId);
 	    sessionIdCookie.setMaxAge(86400);
-	    
-	    Cookie orgId = null;
+
+	    JSONObject jsonObject = new JSONObject();
+
+	    int orgId = 0;
 	    PreparedStatement getOrgId = connection.prepareStatement(Constants.OrgId);
 	    getOrgId.setString(1, email);
 	    ResultSet orgResultSet = getOrgId.executeQuery();
 	    while (orgResultSet.next()) {
-	        orgId = new Cookie("org_Id", String.valueOf(orgResultSet.getInt("Org_Id")));
-	        orgId.setMaxAge(86400);
+	    	orgId = orgResultSet.getInt("Org_Id");
 	    }
-	   
-	    Cookie panelistId = null;
-	    Cookie adminId = null;
+
+	    int panelistId = 0;
+	    int adminId = 0;
 
 	    if (this.role.equalsIgnoreCase("Admin")) {
 	        PreparedStatement getAdminId = connection.prepareStatement(Constants.adminId);
 	        getAdminId.setString(1, email);
 	        ResultSet adminResultSet = getAdminId.executeQuery();
 	        while (adminResultSet.next()) {
-	            adminId = new Cookie("admin_Id", String.valueOf(adminResultSet.getInt("Admin_Id")));
-	            adminId.setMaxAge(86400);
+	            adminId = adminResultSet.getInt("Admin_Id");
 	        }
 	    } else {
 	        PreparedStatement getPanelistId = connection.prepareStatement(Constants.panelistId);
 	        getPanelistId.setString(1, email);
 	        ResultSet panelistResultSet = getPanelistId.executeQuery();
 	        while (panelistResultSet.next()) {
-	            panelistId = new Cookie("panelist_Id", String.valueOf(panelistResultSet.getInt("Panelist_Id")));
-	            panelistId.setMaxAge(86400);
+	            panelistId = panelistResultSet.getInt("Panelist_Id");
 	        }
 	    }
-	    
-	    if (orgId == null) {
-	        orgId = new Cookie("org_Id", "");
-	        orgId.setMaxAge(0); 
+
+	    if (orgId != 0) {
+	    	jsonObject.put("Org_Id", orgId);
 	    }
-	    
-	    if (panelistId == null) {
-	        panelistId = new Cookie("panelist_Id", "");
-	        panelistId.setMaxAge(0); 
+
+	    if (panelistId != 0) {
+	    	jsonObject.put("Panelist_Id", panelistId);
+	    	jsonObject.put("role", "panelist");
 	    }
-	    
-	    if (adminId == null) {
-	        adminId = new Cookie("admin_Id", "");
-	        adminId.setMaxAge(0);
+
+	    if (adminId != 0) {
+	    	jsonObject.put("Admin_Id", adminId);
+	    	jsonObject.put("role", "admin");
 	    }
-	    
-	    Cookie[] cookies = {sessionIdCookie, orgId, panelistId, adminId};
-	    return cookies;
+
+	    return jsonObject;
+	
 	}
 
 	

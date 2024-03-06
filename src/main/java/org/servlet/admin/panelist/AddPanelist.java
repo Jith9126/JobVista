@@ -11,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -63,21 +64,9 @@ public class AddPanelist extends HttpServlet {
 		System.out.println("get");
         JSONObject responseData = new JSONObject();
         AdminManagement adminManagement = new AdminManagement();
-        Cookie[] cookies = request.getCookies();
-		String orgId = "1";
-		String adminId = null;
-        if (cookies != null) {
-            
-        	for(Cookie cookie:cookies) {
-        		if(cookie.getName().equalsIgnoreCase("org_Id")) {
-        			orgId = cookie.getValue();
-            	}
-        		if(cookie.getName().equalsIgnoreCase("admin_Id")) {
-        			adminId = cookie.getValue();
-        		}
-        	}
-        }
-        
+         
+        int orgId = 0;
+        int adminId = 0;
         try {
             
             StringBuilder sb = new StringBuilder();
@@ -89,16 +78,22 @@ public class AddPanelist extends HttpServlet {
             }
             
             JSONObject jsonObject = new JSONObject(sb.toString());
-            String name = jsonObject.getString("name");
-            String email = jsonObject.getString("email");
-            String genderStr = jsonObject.getString("gender");
+            
+            JSONObject userDetails = jsonObject.getJSONObject("userDetails");
+			orgId = userDetails.getInt("Org_Id");
+			adminId = userDetails.getInt("Admin_Id");
+			
+			JSONObject panelist = jsonObject.getJSONObject("panelist");
+            String name = panelist.getString("name");
+            String email = panelist.getString("email");
+            String genderStr = panelist.getString("gender");
             System.out.println(genderStr);
             Gender  gender = Gender.valueOf(genderStr.toUpperCase());
-            String position = jsonObject.getString("position");
-            String password = jsonObject.getString("password");
-            String department = jsonObject.getString("department");
+            String position = panelist.getString("position");
+            String password = panelist.getString("password");
+            String department = panelist.getString("department");
             responseData.put("statusCode", 200);
-            responseData.put("message",adminManagement.addPanelist(name, email, gender, position, password, department, Integer.parseInt(orgId)));
+            responseData.put("message",adminManagement.addPanelist(name, email, gender, position, password, department, orgId));
         
         }
         

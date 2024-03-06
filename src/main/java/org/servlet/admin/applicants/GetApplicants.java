@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -51,18 +50,9 @@ public class GetApplicants extends HttpServlet {
 	   
 	    JSONObject responseData = new JSONObject();
 	    AdminManagement adminManagement = new AdminManagement();
-	    Cookie[] cookies = request.getCookies();
-		String adminId = null;
-		
-        if (cookies != null) {
-        	for(Cookie cookie:cookies) {
-        		if(cookie.getName().equalsIgnoreCase("admin_Id")) {
-        			adminId = cookie.getValue();
-            	}
-        	}
-        }
-        
 	    
+		int adminId = 0;
+		
 	    try {
 	        
 	        StringBuilder sb = new StringBuilder();
@@ -76,6 +66,8 @@ public class GetApplicants extends HttpServlet {
 	        JSONObject jsonObject = new JSONObject(sb.toString());
 	        int openingId = jsonObject.getInt("openingId");
 	        String status = jsonObject.getString("status");
+	        JSONObject userDetails = jsonObject.getJSONObject("userDetails");
+			adminId = userDetails.getInt("Admin_Id");
 	        JSONArray applicants = adminManagement.seeApplicants(openingId, status);
 	        responseData.put("statusCode", 200);
 	        responseData.put("message", applicants);

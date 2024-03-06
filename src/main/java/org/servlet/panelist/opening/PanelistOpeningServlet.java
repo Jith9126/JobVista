@@ -1,5 +1,6 @@
 package org.servlet.panelist.opening;
 
+import java.io.BufferedReader;
 import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,31 +41,40 @@ public class PanelistOpeningServlet extends HttpServlet {
 		JSONObject responseData = new JSONObject();
 		AdminManagement adminManagement = new AdminManagement();
 		OpeningDetailsDAO OpeningDetailsDAO = new OpeningDetailsDAO();
-		Cookie[] cookies = request.getCookies();
-		int PanelistID = 2;
-		int OrgID = 1;
-
-//		if (cookies != null) {
-//
-//			for (Cookie cookie : cookies) {
-//				if (cookie.getName().equalsIgnoreCase("org_Id")) {
-//					OrgID = Integer.parseInt(cookie.getValue());
-//				}
-//				if (cookie.getName().equalsIgnoreCase("admin_Id")) {
-//					PanelistID = Integer.parseInt(cookie.getValue());
-//				}
-//			}
-//		}
+		StringBuilder sb = new StringBuilder();
+        BufferedReader reader = request.getReader();
+        String line;
+        
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+		
+		int orgId = 0;
+		int panelistId = 0;
+		try {
+			JSONObject jsonObject = new JSONObject(sb.toString());
+			JSONObject userDetails = jsonObject.getJSONObject("userDetails");
+			orgId = userDetails.getInt("Org_Id");
+			panelistId = userDetails.getInt("Panelist_Id");
+		
+		} 
+		
+		catch (JSONException e) {
+		
+//			logger.error("json exception while getting data from json object \n"+e.getMessage());
+		
+		}
+		
 		List<JSONObject> openingDetailsList = new ArrayList<>();
-		openingDetailsList = OpeningDetailsDAO.getOpeningsForPanelist(PanelistID,openingDetailsList);
+		openingDetailsList = OpeningDetailsDAO.getOpeningsForPanelist(panelistId,openingDetailsList);
 		System.out.println(openingDetailsList.toString());
 		
 		List<JSONObject> currentOpeningDetailsList = new ArrayList<>();
-		currentOpeningDetailsList = OpeningDetailsDAO.getCurrentOpeningsForPanelist(PanelistID,currentOpeningDetailsList);
+		currentOpeningDetailsList = OpeningDetailsDAO.getCurrentOpeningsForPanelist(panelistId,currentOpeningDetailsList);
 		System.out.println(currentOpeningDetailsList.toString());
 		
 		List<JSONObject> upComingOpeningDetailsList = new ArrayList<>();
-		upComingOpeningDetailsList = OpeningDetailsDAO.getUpComingOpeningsForPanelist(PanelistID,upComingOpeningDetailsList);
+		upComingOpeningDetailsList = OpeningDetailsDAO.getUpComingOpeningsForPanelist(panelistId,upComingOpeningDetailsList);
 		System.out.println(upComingOpeningDetailsList.toString());
 		
 		JSONObject jsonResponse = new JSONObject();

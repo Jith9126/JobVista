@@ -1,5 +1,6 @@
 package org.servlet.admin.opening;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -18,6 +19,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class getOpeningsWithDepartment
@@ -51,36 +53,53 @@ public class GetOpenings extends HttpServlet {
 		response.setHeader("Access-Control-Allow-Methods", "GET");
 		response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-		JSONObject responseData = new JSONObject();
-		AdminManagement adminManagement = new AdminManagement();
 		OpeningDetailsDAO OpeningDetailsDAO = new OpeningDetailsDAO();
-		Cookie[] cookies = request.getCookies();
-		String orgId = "1";
-		String adminId = null;
-		int ORGID = Integer.parseInt(orgId);
-
-		if (cookies != null) {
-
-//			for (Cookie cookie : cookies) {
-//				if (cookie.getName().equalsIgnoreCase("org_Id")) {
-//					orgId = cookie.getValue();
-//				}
-//				if (cookie.getName().equalsIgnoreCase("admin_Id")) {
-//					adminId = cookie.getValue();
-//				}
-//			}
+		
+		StringBuilder sb = new StringBuilder();
+        BufferedReader reader = request.getReader();
+        String line;
+        
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+		
+		int orgId = 0;
+		int adminId = 0;
+		try {
+			JSONObject jsonObject = new JSONObject(sb.toString());
+			JSONObject userDetails = jsonObject.getJSONObject("userDetails");
+			orgId = userDetails.getInt("Org_Id");
+			adminId = userDetails.getInt("Admin_Id");
+		
+		} 
+		
+		catch (JSONException e) {
+		
+			logger.error("json exception while getting data from json object \n"+e.getMessage());
+		
 		}
+		
 
-		List<JSONObject> openingDetailsList = OpeningDetailsDAO.getAllOpeningsForAdmin(ORGID);
+		List<JSONObject> openingDetailsList = OpeningDetailsDAO.getAllOpeningsForAdmin(orgId);
 		JSONObject jsonResponse = new JSONObject();
+		
         try {
 			jsonResponse.put("Status", "Success");
 			jsonResponse.put("Value", new JSONArray(openingDetailsList));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			e.printStackTrace();
 		}
+      
+        catch (JSONException e) {
+			logger.error("Admin:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
+	    
+			try {
+				jsonResponse.put("statusCode", 500);
+				jsonResponse.put("message", "Error parsing JSON object.\n");
+			} 
+	    	catch (JSONException e1) {
+	    		logger.error("Admin:"+adminId+"\nError parsing JSON object." + e1.getMessage());
+			}
+		
+        }
         
         response.setContentType("application/json");
 
