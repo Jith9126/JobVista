@@ -34,21 +34,20 @@ public class AddApplicantServlet extends HttpServlet {
             throws ServletException, IOException {
 //        Logger logger = new CommonLogger(AddApplicantServlet.class).getLogger();
 
-    	System.out.println("Entered");
+   
         BufferedReader reader = request.getReader();
         StringBuilder jsonStringBuilder = new StringBuilder();
         String line;
-        System.out.println("started");
+     
         while ((line = reader.readLine()) != null) {
             jsonStringBuilder.append(line);
         }
-        System.out.println("while ended");
+    
         String json = jsonStringBuilder.toString();
 
         try {
             JSONObject jsonObject = new JSONObject(json);
-            System.out.println("starting to get data");
-            // Extracting values from JSON
+            
             String name = jsonObject.getString("name");
             String email = jsonObject.getString("email");
             String dobString = jsonObject.getString("dob");

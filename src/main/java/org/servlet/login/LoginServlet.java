@@ -11,7 +11,6 @@ import org.util.CommonLogger;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,6 +42,7 @@ public class LoginServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
@@ -55,6 +55,7 @@ public class LoginServlet extends HttpServlet {
 		response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         
         
 		
@@ -62,7 +63,6 @@ public class LoginServlet extends HttpServlet {
 		
 		String email = null;
 		String password = null;
-		System.out.println("erty");
 		
 		try {
 			
@@ -89,19 +89,11 @@ public class LoginServlet extends HttpServlet {
 				responseObject.put("message", output);
 			}
 			else {
-				Cookie[] cookies = login.updateSession(email);
-				
-				for (Cookie cookie : cookies) {
-			        response.addCookie(cookie);
-			        if(cookie.getName().equalsIgnoreCase("admin_Id")) {
-			        	responseObject.put("role", "admin");
-			        }
-			        else {
-			        	responseObject.put("role", "panelist");
-			        }
-			    }
+				JSONObject detailsObject = login.updateSession(email);
+
 				responseObject.put("statusCode", 200);
 				responseObject.put("message", "Logged in successfully");
+				responseObject.put("userDetails", detailsObject);
 			}
 		
 		}

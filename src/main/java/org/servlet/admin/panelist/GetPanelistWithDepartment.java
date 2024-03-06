@@ -11,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -41,20 +42,9 @@ public class GetPanelistWithDepartment extends HttpServlet {
         String line;
 		JSONObject responseData = new JSONObject();
 	    AdminManagement adminManagement = new AdminManagement();
-	    Cookie[] cookies = request.getCookies();
-		String orgId = "1";
-		String adminId = null;
-        if (cookies != null) {
-            
-        	for(Cookie cookie:cookies) {
-        		if(cookie.getName().equalsIgnoreCase("org_Id")) {
-        			orgId = cookie.getValue();
-            	}
-        		if(cookie.getName().equalsIgnoreCase("admin_Id")) {
-        			adminId = cookie.getValue();
-        		}
-        	}
-        }
+	    
+	    int orgId = 0;
+	    int adminId = 0;
         
         while ((line = reader.readLine()) != null) {
             sb.append(line);
@@ -64,7 +54,12 @@ public class GetPanelistWithDepartment extends HttpServlet {
         	
             JSONObject jsonObject = new JSONObject(sb.toString());
             int departmentId = jsonObject.getInt("departmentId");
-            JSONArray panelistsData = adminManagement.getPanelistsWithDepartment(Integer.parseInt(orgId), departmentId);
+            
+            JSONObject userDetails = jsonObject.getJSONObject("userDetails");
+			orgId = userDetails.getInt("Org_Id");
+			adminId = userDetails.getInt("Admin_Id");
+		
+            JSONArray panelistsData = adminManagement.getPanelistsWithDepartment(orgId, departmentId);
             responseData.put("statusCode", 200);
             responseData.put("message", panelistsData);
             

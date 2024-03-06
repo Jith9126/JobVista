@@ -75,7 +75,6 @@ e HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 		String adminEmail = null;
 		String adminPassword = null;
 		try {
-			System.out.println(jsonData);
 			JSONObject jsonObject = new JSONObject(jsonData);
 			orgName = jsonObject.getJSONObject("organization").getString("orgName");
 			orgType = jsonObject.getJSONObject("organization").getString("orgType");
@@ -98,20 +97,13 @@ e HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 		}
 		
 		SignUp signUp = new SignUp();
-		String output = null;
+		JSONObject output = null;
 		JSONObject responseObject = new JSONObject();
 		
 		try {
 			output = signUp.addOrganisation(orgName, orgType, industry, contactEmail, contactNumber, adminName, adminEmail,adminPassword);
 			
-			if(output.equals("Admin successfully added")) {
-				responseObject.put("statusCode", 200);
-				responseObject.put("message", output);
-			}
-			else {
-				responseObject.put("statusCode", 500);
-				responseObject.put("message", output);
-			}
+			responseObject = output;
 		
 		}
 		
@@ -127,6 +119,7 @@ e HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 			}
 	        
 	    } 
+		//eg
 	    catch (SQLException e) {
 	      e.printStackTrace();
 	    	try {

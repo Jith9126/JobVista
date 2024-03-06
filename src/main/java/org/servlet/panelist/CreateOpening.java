@@ -73,21 +73,12 @@ public class CreateOpening extends HttpServlet {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
         
 		Logger logger = CommonLogger.getCommon().getLogger(CreateOpening.class);
-//		Logger logger = Logger.getLogger(CreateOpening.class);
-		//PropertyConfigurator.configure("/home/ajith-zstk355/.logs/jobvista.properties");
+
 		JSONObject responseJson = new JSONObject();
 		StringBuilder jsonLoad = new StringBuilder();
 		
-		Cookie[] cookies = request.getCookies();
-		String panelistId = "1";
-        if (cookies != null) {
-            
-        	for(Cookie cookie:cookies) {
-        		if(cookie.getName().equalsIgnoreCase("panelist_Id")) {
-        			panelistId = cookie.getValue();
-        		}
-        	}
-        }
+		int panelistId = 0;
+        
         try {
             logger.info("Starting to read JSON payload from request.");
 
@@ -99,6 +90,9 @@ public class CreateOpening extends HttpServlet {
 //            JSONObject jsonData = new JSONObject(request.getParameter("JSON"));
             JSONObject jsonData = new JSONObject(jsonLoad.toString());
             logger.info("JSON payload successfully parsed.");
+            
+            JSONObject userDetails = jsonData.getJSONObject("userDetails");
+			panelistId = userDetails.getInt("Panelist_Id");
 
 //            JSONObject panelistJson = jsonData.getJSONObject("panelist");
             JSONObject openingJson = jsonData.getJSONObject("opening");
@@ -138,7 +132,7 @@ public class CreateOpening extends HttpServlet {
 
             logger.info("Creating panelist and opening objects.");
 
-            int OpeningId = PanelistManager.getPanelistManger().addOpening(Integer.parseInt(panelistId), opening , interviwers);
+            int OpeningId = PanelistManager.getPanelistManger().addOpening(panelistId, opening , interviwers);
             
             
             

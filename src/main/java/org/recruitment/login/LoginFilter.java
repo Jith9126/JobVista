@@ -39,7 +39,6 @@ public class LoginFilter implements Filter {
         BufferedReader reader = httpRequest.getReader();
         String line;
         while ((line = reader.readLine()) != null) {
-        	System.out.println("get");
         	sb.append(line);
         }
         
@@ -66,7 +65,7 @@ public class LoginFilter implements Filter {
 			logger.error("User "+email+"\njson exception in login filter while parsing json object\n"+e.getMessage());
 		}
 		
-		String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+		String passwordRegex = "^(?=.*\\d)(?=.*[a-zA-Z].*[a-zA-Z].*[a-zA-Z]).{8,}$";
 		String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
 	    

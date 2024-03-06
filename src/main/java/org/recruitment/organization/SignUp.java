@@ -1,6 +1,8 @@
 package org.recruitment.organization;
 
 import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.util.CommonLogger;
 import org.util.ConnectionClass;
 import org.util.Constants;
@@ -12,16 +14,18 @@ import java.sql.SQLException;
 
 public class SignUp {
 	Logger logger = CommonLogger.getCommon().getLogger(SignUp.class);
-	public String addAdmin(String name, String email, String password, int orgId) throws SQLException {
+	
+	public JSONObject addAdmin(String name, String email, String password, int orgId) throws SQLException, JSONException {
 		ConnectionClass db = ConnectionClass.CreateCon();
 		Connection connection = db.getConnection();
 		
+		JSONObject response = new JSONObject();
 		PreparedStatement preparedStatement = connection.prepareStatement(Constants.addAdmin);
 		preparedStatement.setString(1, name);
 		preparedStatement.setString(2, email);
 		preparedStatement.setInt(3, orgId);
 		int affectedRows = preparedStatement.executeUpdate();
-		if (affectedRows <=0 ) {
+		if (affectedRows > 0 ) {
 			preparedStatement = connection.prepareStatement(Constants.addUser);
 			preparedStatement.setString(1, "Admin");
 			preparedStatement.setString(2, password);
@@ -29,19 +33,43 @@ public class SignUp {
 			int addUser = preparedStatement.executeUpdate();
 			
 			if(addUser>0) {
+				
+				preparedStatement = connection.prepareStatement("select Admin_Id from Admin where Email = ?");
+				preparedStatement.setString(1, email);
+				ResultSet admin = preparedStatement.executeQuery();
+				
+				int adminId = 0;
+				
+				while(admin.next()) {
+					adminId = admin.getInt("Admin_Id");
+				}
+				
 				logger.info("Admin sucessfully added");
-				return "Admin successfully added";
+				 response.put("statusCode", 200);
+	             response.put("message", "Organization and admin successfully added");
+	             JSONObject userDetails = new JSONObject();
+	             userDetails.put("role", "Admin");
+	             userDetails.put("Org_Id", orgId);
+	             userDetails.put("Admin_Id", adminId);
+	             response.put("userDetails", userDetails);
+	             
+	             return response;
 			}
 		}
+		
 		logger.info("Failed to add admin");
-		return "Failed to add Admin";
+		response.put("statusCode", 200);
+        response.put("message", "Failed to add admin");
+        return response;
 		
 	}
 	
-	public String addOrganisation(String orgName, String orgType, String industry, String contactEmail, String contactNumber, String adminName, String adminEmail, String adminPassword) throws SQLException {
+	public JSONObject addOrganisation(String orgName, String orgType, String industry, String contactEmail, String contactNumber, String adminName, String adminEmail, String adminPassword) throws SQLException, JSONException {
 		
 		ConnectionClass db = ConnectionClass.CreateCon();
 		Connection connection = db.getConnection();
+		
+		JSONObject jsonObject = new JSONObject();
 		
 		PreparedStatement preparedStatement = connection.prepareStatement(Constants.addOrganization);
 		preparedStatement.setString(1, orgName);
@@ -52,7 +80,9 @@ public class SignUp {
 		int affectedRows = preparedStatement.executeUpdate();
 		if (affectedRows <=0 ) {
 			logger.info("Failed to add Oraganization");
-			return "Failed to add Oraganization";
+			jsonObject.put("statusCode", 500);
+			jsonObject.put("message", "Failed to add Oraganization");
+			return jsonObject;
 		}
 		
 		preparedStatement = connection.prepareStatement(Constants.getOrgId);
