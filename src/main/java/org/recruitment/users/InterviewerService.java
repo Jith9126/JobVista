@@ -1,6 +1,7 @@
 package org.recruitment.users;
 
 import org.util.ConnectionClass;
+import org.util.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,15 +24,32 @@ public class InterviewerService {
 
     public void setMarks(int jobSeekerId, int testId, int marks, String status) throws SQLException {
         try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
-            String query = "INSERT INTO Result (Job_Seeker_Id, Test_Id, Points, Status) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO Result (Job_Seeker_Id, Test_Id, Status, Points) VALUES (?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, jobSeekerId);
                 preparedStatement.setInt(2, testId);
-                preparedStatement.setInt(3, marks);
-                preparedStatement.setString(4, status);
+                preparedStatement.setString(3, status);
+                preparedStatement.setInt(4, marks);
+                
                 preparedStatement.executeUpdate();
             }
         }
     }
+	public boolean addPanelistToOpening(int openingId, String email) {
+		Connection conn = ConnectionClass.CreateCon().getConnection();
+		PreparedStatement assinginterviwers;
+		try {
+			assinginterviwers = conn.prepareStatement(Constants.assignPanelistToOpenings);
+			assinginterviwers.setString(1, email);
+			assinginterviwers.setInt(2,openingId);
+			
+			assinginterviwers.executeUpdate();
+			System.out.println("Working\n" +assinginterviwers);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
 
 }

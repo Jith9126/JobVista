@@ -112,6 +112,9 @@ public class PanelistManager {
 		}
 	}
 	
+
+	
+	
 	public boolean isPanelistExist(Panelist panelist) throws Exception {
 		int departmentId=0;
 		int orgId=0;
