@@ -42,83 +42,63 @@ public class PanelistOpeningServlet extends HttpServlet {
 		AdminManagement adminManagement = new AdminManagement();
 		OpeningDetailsDAO OpeningDetailsDAO = new OpeningDetailsDAO();
 		StringBuilder sb = new StringBuilder();
-        BufferedReader reader = request.getReader();
-        String line;
-        
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-        }
-		
+		BufferedReader reader = request.getReader();
+		String line;
+
+		while ((line = reader.readLine()) != null) {
+			sb.append(line);
+		}
+
 		int orgId = 0;
 		int panelistId = 0;
+		//You need to give a JSON;
+		//Which have Org_Id and Panelist_Id;
 		try {
 			JSONObject jsonObject = new JSONObject(sb.toString());
 			JSONObject userDetails = jsonObject.getJSONObject("userDetails");
 			orgId = userDetails.getInt("Org_Id");
 			panelistId = userDetails.getInt("Panelist_Id");
-		
-		} 
-		
+		}
 		catch (JSONException e) {
-		
-//			logger.error("json exception while getting data from json object \n"+e.getMessage());
-		
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return;
 		}
-		
-		List<JSONObject> openingDetailsList = new ArrayList<>();
-		openingDetailsList = OpeningDetailsDAO.getOpeningsForPanelist(panelistId,openingDetailsList);
-		System.out.println(openingDetailsList.toString());
+		if (orgId == 0 || panelistId == 0) {
+			response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+			return;
+		} else {
+			List<JSONObject> openingDetailsList = new ArrayList<>();
+			openingDetailsList = OpeningDetailsDAO.getOpeningsForPanelist(panelistId, openingDetailsList);
+			System.out.println(openingDetailsList.toString());
 
-		
-		List<JSONObject> currentOpeningDetailsList = new ArrayList<>();
-		currentOpeningDetailsList = OpeningDetailsDAO.getCurrentOpeningsForPanelist(panelistId,currentOpeningDetailsList);
-		System.out.println(currentOpeningDetailsList.toString());
+			List<JSONObject> currentOpeningDetailsList = new ArrayList<>();
+			currentOpeningDetailsList = OpeningDetailsDAO.getCurrentOpeningsForPanelist(panelistId,currentOpeningDetailsList);
+			System.out.println(currentOpeningDetailsList.toString());
 
-		
-		List<JSONObject> upComingOpeningDetailsList = new ArrayList<>();
-		upComingOpeningDetailsList = OpeningDetailsDAO.getUpComingOpeningsForPanelist(panelistId,upComingOpeningDetailsList);
-		System.out.println(upComingOpeningDetailsList.toString());
+			List<JSONObject> upComingOpeningDetailsList = new ArrayList<>();
+			upComingOpeningDetailsList = OpeningDetailsDAO.getUpComingOpeningsForPanelist(panelistId,upComingOpeningDetailsList);
+			System.out.println(upComingOpeningDetailsList.toString());
 
-		
-		JSONObject jsonResponse = new JSONObject();
-		JSONObject jsonResponseForPanelist = new JSONObject();
+			JSONObject jsonResponse = new JSONObject();
+			JSONObject jsonResponseForPanelist = new JSONObject();
 
-		try {
-		    jsonResponseForPanelist.put("openings", openingDetailsList);
-		    jsonResponseForPanelist.put("currentOpenings", currentOpeningDetailsList);
-		    jsonResponseForPanelist.put("upComingOpenings", upComingOpeningDetailsList);
+			try {
+				jsonResponseForPanelist.put("openings", openingDetailsList);
+				jsonResponseForPanelist.put("currentOpenings", currentOpeningDetailsList);
+				jsonResponseForPanelist.put("upComingOpenings", upComingOpeningDetailsList);
 
-		    jsonResponse.put("Status", "Success");
-		    jsonResponse.put("Value", jsonResponseForPanelist);
+				jsonResponse.put("Status", "Success");
+				jsonResponse.put("Value", jsonResponseForPanelist);
 
-		} catch (JSONException e) {
-		    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		    e.printStackTrace();
+			} catch (JSONException e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				e.printStackTrace();
+			}
+
+			response.setContentType("application/json");
+
+			// Write JSON response
+			response.getWriter().print(jsonResponse.toString());
 		}
-
-		response.setContentType("application/json");
-
-		// Write JSON response
-		response.getWriter().print(jsonResponse.toString());
-
-
-//		JSONObject jsonResponse = new JSONObject();
-//		JSONObject jsonResponseforPanelist = new JSONObject();
-//		try {
-//			jsonResponseforPanelist.put("openings", openingDetailsList);
-//			jsonResponseforPanelist.put("currentOpenings", currentOpeningDetailsList);
-//			jsonResponse.put("Status", "Success");
-//			jsonResponse.put("Value", jsonResponseforPanelist);
-//		} catch (JSONException e) {
-//			// TODO Auto-generated catch block
-//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//			e.printStackTrace();
-//		}
-//
-//		response.setContentType("application/json");
-//
-//		// Write JSON response
-//		response.getWriter().print(jsonResponse.toString());
-
 	}
 }

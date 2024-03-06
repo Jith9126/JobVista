@@ -72,6 +72,7 @@ public class AddPanelistToOpeningServlet extends HttpServlet {
 
                 if (success) {
                     response.getWriter().write("Panelist added to opening successfully");
+                    response.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     response.getWriter().write("Failed to add Panelist to opening");
                     // Handle failure scenario (e.g., log, return an error response, etc.)

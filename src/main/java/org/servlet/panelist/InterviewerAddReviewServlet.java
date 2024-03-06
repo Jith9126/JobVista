@@ -19,10 +19,10 @@ import java.sql.SQLException;
 @WebServlet("/InterviewerAddReviewServlet")
 public class InterviewerAddReviewServlet extends HttpServlet {
 
-    private final InterviewerService interviewerService = new InterviewerService();
+	private final InterviewerService interviewerService = new InterviewerService();
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        JSONObject jsonResponse = new JSONObject();
 //        resp.setContentType("application/json");
 //
@@ -44,46 +44,56 @@ public class InterviewerAddReviewServlet extends HttpServlet {
 
 		// Parse the JSON payload
 		JSONObject jsonRequest;
-		int jobSeekerId = 1;
-		int panelistId = 1;
+		int jobSeekerId = 0;
+		int panelistId = 0;
 		String review = null;
-		int points = 0;
+		int points = -1;
+
 		try {
 			jsonRequest = new JSONObject(jsonPayload.toString());
 			jobSeekerId = jsonRequest.getInt("jobSeekerId");
-			
-	        panelistId = jsonRequest.getInt("panelistId");
-	        
-	        review = jsonRequest.getString("review");
-	        points = jsonRequest.getInt("points");
+
+			panelistId = jsonRequest.getInt("panelistId");
+
+			review = jsonRequest.getString("review");
+			points = jsonRequest.getInt("points");
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-        try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
-            interviewerService.addReview(panelistId, jobSeekerId, review, points);
-            jsonResponse.put("status", "success");
-            jsonResponse.put("message", "Review added successfully.");
-        } catch (SQLException e) {
-            try {
-				jsonResponse.put("status", "error");
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+		if (jobSeekerId == 0 || panelistId == 0 || review == null || points == -1) {
+			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			try {
+				jsonResponse.put("message", "Error adding review: " + "Value not vaild");
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-            try {
-				jsonResponse.put("message", "Error adding review: " + e.getMessage());
-			} catch (JSONException e1) {
+		} 
+		else {
+			try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
+				interviewerService.addReview(panelistId, jobSeekerId, review, points);
+				jsonResponse.put("status", "success");
+				jsonResponse.put("message", "Review added successfully.");
+			} catch (SQLException e) {
+				try {
+					jsonResponse.put("status", "error");
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					jsonResponse.put("message", "Error adding review: " + e.getMessage());
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} catch (JSONException e) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e.printStackTrace();
 			}
-        } catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+		resp.getWriter().write(jsonResponse.toString());
+	}
 
-        resp.getWriter().write(jsonResponse.toString());
-    }
 }

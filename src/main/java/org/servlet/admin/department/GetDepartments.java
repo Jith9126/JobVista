@@ -69,6 +69,7 @@ public class GetDepartments extends HttpServlet {
 		
 		int orgId = 0;
 		int adminId = 0;
+		//TODO Need to change to Userdetails
 		try {
 			JSONObject jsonObject = new JSONObject(sb.toString());
 			JSONObject userDetails = jsonObject.getJSONObject("userDetails");
