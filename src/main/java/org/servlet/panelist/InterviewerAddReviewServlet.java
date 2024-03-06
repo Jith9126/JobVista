@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,13 +23,44 @@ public class InterviewerAddReviewServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JSONObject jsonResponse = new JSONObject();
-        resp.setContentType("application/json");
+//        JSONObject jsonResponse = new JSONObject();
+//        resp.setContentType("application/json");
+//
+//        int panelistId = Integer.parseInt(req.getParameter("panelistId"));
+//        int jobSeekerId = Integer.parseInt(req.getParameter("jobSeekerId"));
+//        String review = req.getParameter("review");
+//        int points = Integer.parseInt(req.getParameter("points"));
 
-        int panelistId = Integer.parseInt(req.getParameter("panelistId"));
-        int jobSeekerId = Integer.parseInt(req.getParameter("jobSeekerId"));
-        String review = req.getParameter("review");
-        int points = Integer.parseInt(req.getParameter("points"));
+		JSONObject jsonResponse = new JSONObject();
+		resp.setContentType("application/json");
+
+		// Read the JSON payload from the request body
+		BufferedReader reader = req.getReader();
+		StringBuilder jsonPayload = new StringBuilder();
+		String line;
+		while ((line = reader.readLine()) != null) {
+			jsonPayload.append(line);
+		}
+
+		// Parse the JSON payload
+		JSONObject jsonRequest;
+		int jobSeekerId = 1;
+		int panelistId = 1;
+		String review = null;
+		int points = 0;
+		try {
+			jsonRequest = new JSONObject(jsonPayload.toString());
+			jobSeekerId = jsonRequest.getInt("jobSeekerId");
+			
+	        panelistId = jsonRequest.getInt("panelistId");
+	        
+	        review = jsonRequest.getString("review");
+	        points = jsonRequest.getInt("points");
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         try (Connection connection = ConnectionClass.CreateCon().getConnection()) {
             interviewerService.addReview(panelistId, jobSeekerId, review, points);
