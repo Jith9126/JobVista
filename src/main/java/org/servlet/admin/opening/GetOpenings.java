@@ -54,15 +54,16 @@ public class GetOpenings extends HttpServlet {
 		response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
 		OpeningDetailsDAO OpeningDetailsDAO = new OpeningDetailsDAO();
-		
+		JSONObject jsonResponse = new JSONObject();
+
 		StringBuilder sb = new StringBuilder();
-        BufferedReader reader = request.getReader();
-        String line;
-        
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-        }
-		
+		BufferedReader reader = request.getReader();
+		String line;
+
+		while ((line = reader.readLine()) != null) {
+			sb.append(line);
+		}
+
 		int orgId = 0;
 		int adminId = 0;
 		try {
@@ -70,41 +71,43 @@ public class GetOpenings extends HttpServlet {
 			JSONObject userDetails = jsonObject.getJSONObject("userDetails");
 			orgId = userDetails.getInt("Org_Id");
 			adminId = userDetails.getInt("Admin_Id");
-		
-		} 
-		
+
+		}
+
 		catch (JSONException e) {
-		
-			logger.error("json exception while getting data from json object \n"+e.getMessage());
-		
-		}
-		
 
-		List<JSONObject> openingDetailsList = OpeningDetailsDAO.getAllOpeningsForAdmin(orgId);
-		JSONObject jsonResponse = new JSONObject();
-		
-        try {
-			jsonResponse.put("Status", "Success");
-			jsonResponse.put("Value", new JSONArray(openingDetailsList));
+			logger.error("json exception while getting data from json object \n" + e.getMessage());
+
 		}
-      
-        catch (JSONException e) {
-			logger.error("Admin:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
-	    
+		if (orgId == 0 || adminId == 0) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			try {
-				jsonResponse.put("statusCode", 500);
-				jsonResponse.put("message", "Error parsing JSON object.\n");
-			} 
-	    	catch (JSONException e1) {
-	    		logger.error("Admin:"+adminId+"\nError parsing JSON object." + e1.getMessage());
+				jsonResponse.put("message", "Error in Org_Id || Admin_Id");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
 			}
-		
-        }
-        
-        response.setContentType("application/json");
+		} else {
+			List<JSONObject> openingDetailsList = OpeningDetailsDAO.getAllOpeningsForAdmin(orgId);
 
-        // Write JSON response
-        response.getWriter().print(jsonResponse.toString());
+			try {
+				jsonResponse.put("Status", "Success");
+				jsonResponse.put("Value", new JSONArray(openingDetailsList));
+			}
+
+			catch (JSONException e) {
+				logger.error("Admin:" + adminId + "\nError parsing JSON object.\n" + e.getMessage());
+
+				try {
+					jsonResponse.put("statusCode", 500);
+					jsonResponse.put("message", "Error parsing JSON object.\n");
+				} catch (JSONException e1) {
+					logger.error("Admin:" + adminId + "\nError parsing JSON object." + e1.getMessage());
+				}
+
+			}
+			response.setContentType("application/json");
+		}
+		response.getWriter().print(jsonResponse.toString());
 
 	}
 

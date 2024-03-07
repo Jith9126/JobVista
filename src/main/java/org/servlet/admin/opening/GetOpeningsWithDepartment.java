@@ -53,26 +53,22 @@ public class GetOpeningsWithDepartment extends HttpServlet {
 	    AdminManagement adminManagement = new AdminManagement();
 	    
 		int adminId = 0;
+		int departmentId = 0;
+		
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = request.getReader();
+        String line;
+        
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
 		
 	    try {
-	        StringBuilder sb = new StringBuilder();
-	        BufferedReader reader = request.getReader();
-	        String line;
-	        
-	        while ((line = reader.readLine()) != null) {
-	            sb.append(line);
-	        }
-	        
 	        JSONObject jsonObject = new JSONObject(sb.toString());
-	        int departmentId = jsonObject.getInt("departmentId");
+	        departmentId = jsonObject.getInt("departmentId");
 	        
 	        JSONObject userDetails = jsonObject.getJSONObject("userDetails");
 			adminId = userDetails.getInt("Admin_Id");
-			
-	        JSONArray openingsData = adminManagement.getOpeningsWithDepartment(departmentId);
-	        responseData.put("statusCode", 200);
-	        responseData.put("openingsData", openingsData);
-	        
 	    } 
 	    
 	    catch (JSONException e) {
@@ -87,18 +83,33 @@ public class GetOpeningsWithDepartment extends HttpServlet {
 			}
 	        
 	    } 
-	    catch (SQLException e) {
-	      
-	    	try {
-				responseData.put("statusCode", 500);
-				responseData.put("message", "Error occurred while retrieving data from the database.");
-			} 
-	    	catch (JSONException e1) {
-	    		logger.error("Admin: "+adminId+"\nError parsing JSON object.\n" + e1.getMessage());
-			}
-	    	logger.error("Admin:"+adminId+"\nError occurred while retrieving data from the database. \n"+e.getMessage());
-	        
-	    }
+//	    catch (SQLException e) {
+//	      
+//	    	try {
+//				responseData.put("statusCode", 500);
+//				responseData.put("message", "Error occurred while retrieving data from the database.");
+//			} 
+//	    	catch (JSONException e1) {
+//	    		logger.error("Admin: "+adminId+"\nError parsing JSON object.\n" + e1.getMessage());
+//			}
+//	    	logger.error("Admin:"+adminId+"\nError occurred while retrieving data from the database. \n"+e.getMessage());
+//	        
+//	    }
+
+        JSONArray openingsData;
+		try {
+			openingsData = adminManagement.getOpeningsWithDepartment(departmentId);
+	        responseData.put("statusCode", 200);
+	        responseData.put("openingsData", openingsData);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        
 	    
 	    
 	    response.getWriter().write(responseData.toString());

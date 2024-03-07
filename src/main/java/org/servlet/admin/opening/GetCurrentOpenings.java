@@ -19,7 +19,6 @@ import org.json.JSONObject;
 import org.recruitment.organization.AdminManagement;
 import org.util.CommonLogger;
 
-
 @WebServlet("/GetCurrentOpenings")
 public class GetCurrentOpenings extends HttpServlet {
 
@@ -52,20 +51,22 @@ public class GetCurrentOpenings extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    
-	    JSONObject responseData = new JSONObject();
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		JSONObject responseData = new JSONObject();
 		AdminManagement adminManagement = new AdminManagement();
 		StringBuilder sb = new StringBuilder();
-        BufferedReader reader = request.getReader();
-        String line;
-        
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-        }
-		
+		BufferedReader reader = request.getReader();
+		String line;
+
+		while ((line = reader.readLine()) != null) {
+			sb.append(line);
+		}
+
 		int orgId = 0;
 		int adminId = 0;
 		try {
@@ -73,51 +74,46 @@ public class GetCurrentOpenings extends HttpServlet {
 			JSONObject userDetails = jsonObject.getJSONObject("userDetails");
 			orgId = userDetails.getInt("Org_Id");
 			adminId = userDetails.getInt("Admin_Id");
-		
-		} 
-		
-		catch (JSONException e) {
-		
-			logger.error("json exception while getting data from json object \n"+e.getMessage());
-		
+		} catch (JSONException e) {
+			logger.error("json exception while getting data from json object \n" + e.getMessage());
 		}
-		
-        
-        try {
-        	JSONArray openingsData = adminManagement.getCurrentOpenings(orgId);
-        	
-        	responseData.put("statusCode", 200);
-			responseData.put("message", openingsData);
-		} 
-        catch (JSONException e) {
-        	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	    	logger.error("User:"+adminId+"\nError parsing JSON object.\n" + e.getMessage());
-	    	try {
-				responseData.put("statusCode", 500);
-				responseData.put("message", "Error parsing JSON object.\n");
-			} 
-	    	catch (JSONException e1) {
-	    		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	    		logger.error("User:"+adminId+"\nError parsing JSON object." + e1.getMessage());
+		if (orgId == 0 || adminId == 0) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			try {
+				responseData.put("message", "Error in Org_Id || Admin_Id");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
 			}
-	        
-	    } 
-	    catch (SQLException e) {
-	    	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	    	e.printStackTrace();
-	    	try {
-				responseData.put("statusCode", 500);
-				responseData.put("message", "Error occurred while retrieving data from the database.");
-			} 
-	    	catch (JSONException e1) {
-	    		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	    		logger.error("User: "+adminId+"\nError parsing JSON object.\n" + e1.getMessage());
+		} else {
+			try {
+				JSONArray openingsData = adminManagement.getCurrentOpenings(orgId);
+				responseData.put("statusCode", 200);
+				responseData.put("message", openingsData);
+			} catch (JSONException e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				logger.error("User:" + adminId + "\nError parsing JSON object.\n" + e.getMessage());
+				try {
+					responseData.put("statusCode", 500);
+					responseData.put("message", "Error parsing JSON object.\n");
+				} catch (JSONException e1) {
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					logger.error("User:" + adminId + "\nError parsing JSON object." + e1.getMessage());
+				}
+			} catch (SQLException e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				e.printStackTrace();
+				try {
+					responseData.put("statusCode", 500);
+					responseData.put("message", "Error occurred while retrieving data from the database.");
+				} catch (JSONException e1) {
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					logger.error("User: " + adminId + "\nError parsing JSON object.\n" + e1.getMessage());
+				}
+				logger.error("User:" + adminId + "\nError occurred while retrieving data from the database. \n"
+						+ e.getMessage());
 			}
-	    	logger.error("User:"+adminId+"\nError occurred while retrieving data from the database. \n"+e.getMessage());
-	        
-	    }
-	    
-	    response.getWriter().write(responseData.toString());
-	        
+		}
+		response.getWriter().write(responseData.toString());
+
 	}
 }

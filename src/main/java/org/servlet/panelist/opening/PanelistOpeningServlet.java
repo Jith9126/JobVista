@@ -57,7 +57,7 @@ public class PanelistOpeningServlet extends HttpServlet {
 			JSONObject jsonObject = new JSONObject(sb.toString());
 			JSONObject userDetails = jsonObject.getJSONObject("userDetails");
 			orgId = userDetails.getInt("Org_Id");
-			panelistId = userDetails.getInt("Panelist_Id");
+			panelistId = userDetails.getInt(" ");
 		}
 		catch (JSONException e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
