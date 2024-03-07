@@ -82,8 +82,8 @@ public class CheckCookieAfterLogin extends HttpServlet {
                     responseData.put("message", "Authentication Success");
                     response.getWriter().write(responseData.toString());
                     response.setStatus(HttpServletResponse.SC_OK);
-                    
-                } else {
+                } 
+                else {
                     responseData.put("message", "Invalid Admin ID");
                     responseData.put("status", "error");
                     response.getWriter().write(responseData.toString());
